@@ -15,8 +15,8 @@ function Header() {
             <NavDropdown title="Manage" id="basic-nav-dropdown">
               <NavDropdown.Item href="/clients">Clients</NavDropdown.Item>
               <NavDropdown.Item href="/suppliers">Suppliers</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Vehicles</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.4">Workers</NavDropdown.Item>
+              <NavDropdown.Item href="/vehicles">Vehicles</NavDropdown.Item>
+              <NavDropdown.Item href="/workers">Workers</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
