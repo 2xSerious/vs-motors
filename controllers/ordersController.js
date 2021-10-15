@@ -24,8 +24,19 @@ exports.addOrder = async (req, res, next) => {
 
 exports.getLastInsertId = async (req, res, next) => {
   try {
-    const res = await Order.getLastInsertId();
-    res.status(200).json({ res });
+    const response = await Order.getLastInsertId();
+    res.status(200).json({ response });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+exports.deleteOrderById = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let response = await Order.deleteOrderById(id);
+    res.status(200).json({ response });
   } catch (error) {
     console.log(error);
     next(error);
