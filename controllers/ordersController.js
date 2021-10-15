@@ -12,8 +12,8 @@ exports.getAll = async (req, res, next) => {
 
 exports.addOrder = async (req, res, next) => {
   try {
-    const { date, vehicleId } = req.body;
-    const order = new Order(date, vehicleId);
+    const { date, vehicleId, status } = req.body;
+    const order = new Order(date, vehicleId, status);
     await order.add();
     res.status(201).json({ order });
   } catch (error) {
