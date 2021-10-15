@@ -1,9 +1,10 @@
 const db = require("../config/config");
 
 class Orders {
-  constructor(date, vehicleId) {
+  constructor(date, vehicleId, status) {
     this.date = date;
     this.vehicleId = vehicleId;
+    this.status = status;
   }
   static getAll() {
     let sql = `SELECT o.id as orderID, DATE_FORMAT(o.created_at,'%d/%m/%Y') as created_at,
@@ -36,10 +37,11 @@ class Orders {
 
   add() {
     let sql = `INSERT INTO orders
-                   (created_at, vehicle_id)
+                   (created_at, vehicle_id, status)
                    VALUES (
                        '${this.date}',
-                       '${this.vehicleId}'
+                       '${this.vehicleId}',
+                        '${this.status}'
                    )
                    `;
     return db.execute(sql);

@@ -8,6 +8,7 @@ import Suppliers from "./components/suppliers/Suppliers";
 import Workers from "./components/workers/Workers";
 import Vehicles from "./components/vehicles/Vehicles";
 import Orders from "./components/orders/Orders";
+import Services from "./components/service-sheet/Services";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/workers" component={Workers} />
             <Route path="/vehicles" component={Vehicles} />
             <Route path="/orders" component={Orders} />
+            <Route path="/services" component={Services} />
           </Switch>
         </div>
       </div>

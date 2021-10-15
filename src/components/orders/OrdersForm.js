@@ -29,6 +29,7 @@ const CreateOrder = (props) => {
   });
 
   const [parts, setParts] = useState([]);
+  const status = "open";
 
   useEffect(() => {
     handleVehicle();
@@ -112,6 +113,7 @@ const CreateOrder = (props) => {
       let res = await axios.post("http://localhost:3001/orders", {
         date: d,
         vehicleId: props.vehicleId,
+        status: status,
       });
       console.log(res);
       if (res.statusText === "Created") {

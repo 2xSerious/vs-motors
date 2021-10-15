@@ -10,7 +10,7 @@ function Header() {
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto" navbarScroll>
             <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Service Sheet</Nav.Link>
+            <Nav.Link href="/services">Service Sheet</Nav.Link>
             <Nav.Link href="/orders">Orders</Nav.Link>
             <NavDropdown title="Manage" id="basic-nav-dropdown">
               <NavDropdown.Item href="/clients">Clients</NavDropdown.Item>
