@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBBtn,
@@ -6,20 +6,186 @@ import {
   MDBModalHeader,
   MDBModalBody,
   MDBModalFooter,
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody,
+  MDBIcon,
 } from "mdbreact";
 
-const PartModal = () => {
+import {
+  Input,
+  FormControl,
+  InputLabel,
+  Select,
+  InputAdornment,
+  IconButton,
+  MenuItem,
+} from "@mui/material";
+import axios from "axios";
+
+const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
+  let count = 1;
+  const [part, setPart] = useState({
+    supplierId: 0,
+    name: "",
+    value: "",
+    valueVat: 0,
+    orderId: 0,
+  });
+
+  const [suppliers, setSuppliers] = useState();
+
+  useEffect(() => {
+    getSuppliersList();
+  }, [modal]);
+
+  // GET SUPPLIERS
+  async function getSuppliersList() {
+    const res = await axios.get("http://localhost:3001/suppliers");
+    const data = res.data.response;
+    setSuppliers(data);
+    setPart((prev) => ({ ...prev, orderId: orderId }));
+  }
+
+  // HANDLER PART STATE
+  function handleChangeSupplier(e) {
+    setPart((prev) => ({ ...prev, supplierId: e.target.value }));
+  }
+  function handleChangeName(e) {
+    setPart((prev) => ({ ...prev, name: e.target.value }));
+  }
+  function handleChangeValue(e) {
+    const vRegex = /^\d+\.?\d{0,2}$/;
+    let value = e.target.value;
+    if (!value || vRegex.test(value)) {
+      setPart((prev) => ({ ...prev, value: value, valueVat: value * 1.2 }));
+    }
+  }
+
+  // Handle Submit
+
+  function onSubmitPart(e) {
+    e.preventDefault();
+    addPart();
+  }
+  async function addPart() {
+    let res = await axios.post("http://localhost:3001/parts/add", {
+      name: part.name,
+      value: part.value,
+      valueVat: part.valueVat,
+      orderId: part.orderId,
+      supplierId: part.supplierId,
+    });
+
+    if (res.status === 200) {
+      partsList(part.orderId);
+      setPart((prev) => ({ ...prev, name: "" }));
+      setPart((prev) => ({ ...prev, value: "" }));
+      setPart((prev) => ({ ...prev, valueVat: 0 }));
+    }
+  }
+
+  // HANDLE DELTE
+  function handleDeletePart(e) {
+    e.preventDefault();
+    let id = e.currentTarget.getAttribute("id");
+    console.log(id);
+    deletePart(id);
+  }
+
+  async function deletePart(id) {
+    let res = await axios.delete(`http://localhost:3001/parts/${id}`);
+    if (res.status === 200) {
+      partsList(part.orderId);
+    }
+  }
+
   return (
     <MDBContainer>
-      <MDBBtn onClick={this.toggle}>Modal</MDBBtn>
-      <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
-        <MDBModalHeader toggle={this.toggle}>MDBModal title</MDBModalHeader>
-        <MDBModalBody>(...)</MDBModalBody>
+      <MDBModal isOpen={modal} toggle={toggleModal} backdrop={false}>
+        <MDBModalHeader toggle={toggleModal}>Parts</MDBModalHeader>
+        <MDBModalBody>
+          <form id="add-part" onSubmit={onSubmitPart}>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel htmlFor="supplier-select">Supplier</InputLabel>
+              <Select
+                id="supplier-select"
+                label="Supplier"
+                value={part.supplierId}
+                onChange={handleChangeSupplier}
+              >
+                {suppliers ? (
+                  suppliers.map((e) => {
+                    return (
+                      <MenuItem key={e.id} value={e.id}>
+                        {e.s_name}
+                      </MenuItem>
+                    );
+                  })
+                ) : (
+                  <div>Loading...</div>
+                )}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" sx={{ m: 1, maxWidth: 100 }}>
+              <InputLabel htmlFor="part">Part</InputLabel>
+              <Input id="part" value={part.name} onChange={handleChangeName} />
+            </FormControl>
+            <FormControl variant="standard" sx={{ m: 1, maxWidth: 60 }}>
+              <InputLabel htmlFor="value">Value</InputLabel>
+              <Input
+                id="value"
+                value={part.value}
+                onChange={handleChangeValue}
+                startAdornment={
+                  <InputAdornment position="start">£</InputAdornment>
+                }
+              />
+            </FormControl>
+            <FormControl sx={{ m: 3, maxWidth: 60 }}>
+              <IconButton type="submit" form="add-part">
+                <MDBIcon icon="plus" />
+              </IconButton>
+            </FormControl>
+          </form>
+          <MDBTable>
+            <MDBTableHead>
+              <tr>
+                <th>#</th>
+                <th>Part</th>
+                <th>Value</th>
+                <th>Order #</th>
+              </tr>
+            </MDBTableHead>
+            <MDBTableBody>
+              {parts.map((e) => {
+                return (
+                  <tr key={e.p_name + "-" + e.id + "-" + e.order_id} id={e.id}>
+                    <td>{count++}</td>
+                    <td>{e.p_name}</td>
+                    <td>
+                      £{e.cost} / vat £{e.cost_vat}
+                    </td>
+                    <td>{e.order_id}</td>
+                    <td>
+                      <IconButton
+                        type="button"
+                        id={e.id}
+                        onClick={handleDeletePart}
+                      >
+                        <MDBIcon icon="times" />
+                      </IconButton>
+                    </td>
+                  </tr>
+                );
+              })}
+            </MDBTableBody>
+          </MDBTable>
+        </MDBModalBody>
         <MDBModalFooter>
-          <MDBBtn color="secondary" onClick={this.toggle}>
-            Close
+          <MDBBtn color="success" onClick={toggleModal}>
+            ok
           </MDBBtn>
-          <MDBBtn color="primary">Save changes</MDBBtn>
         </MDBModalFooter>
       </MDBModal>
     </MDBContainer>

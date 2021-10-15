@@ -21,14 +21,11 @@ import axios from "axios";
 const CreateOrder = (props) => {
   const [vehicles, setVehicles] = useState([]);
 
-  const [supplierId, setSupplierId] = useState({
-    id: "",
-    name: "",
-  });
   const [part, setPart] = useState({
     partName: "",
     partValue: "",
     partValueVat: "",
+    supplierId: "",
   });
 
   const [parts, setParts] = useState([]);
@@ -55,7 +52,7 @@ const CreateOrder = (props) => {
     console.log(part.partValue);
 
     setParts((prev) => [...prev, part]);
-    setPart({ partName: "", partValue: "" });
+    setPart((prev) => ({ ...prev, partName: "", partValue: "" }));
   }
   function removeFromPartList(e) {
     let name = e.target.getAttribute("name");
@@ -71,7 +68,7 @@ const CreateOrder = (props) => {
   };
   const handleSupplierChange = (e) => {
     const id = e.target.value;
-    setSupplierId(id);
+    setPart((prev) => ({ ...prev, supplierId: id }));
   };
   const handlePartNameChange = (e) => {
     const part = e.target.value;
@@ -106,8 +103,9 @@ const CreateOrder = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     postOrder();
-    props.toggleUpdate();
   };
+
+  // POST THE ORDER
   async function postOrder() {
     let d = createdAtDate();
     try {
@@ -130,23 +128,32 @@ const CreateOrder = (props) => {
 
         setParts(newParts);
         postParts();
+        props.toggleUpdate();
       }
     } catch (error) {
       console.log(error);
     }
   }
 
+  // POST PARTS LIST - CREATE ORDER COMPONENT
   async function postParts() {
     let payload = {
       parts: [],
     };
     try {
-      console.log(parts);
       parts.forEach((element) => {
         payload.parts.push(element);
       });
-      console.log(payload);
       let res = await axios.post("http://localhost:3001/parts", payload);
+      if (res.status === "200") {
+        setParts([]); // IF PARTS ADDED, RESET
+        setPart({
+          partName: "",
+          partValue: "",
+          partValueVat: "",
+          supplierId: "",
+        }); // IF PARTS ADDED, RESET
+      }
       console.log(res);
     } catch (error) {
       console.log(error);
@@ -178,7 +185,7 @@ const CreateOrder = (props) => {
                     {props.customers ? (
                       props.customers.map((e) => {
                         return (
-                          <MenuItem key={e.id} value={e.id}>
+                          <MenuItem key={e.id + "-" + e.c_name} value={e.id}>
                             {e.c_name}
                           </MenuItem>
                         );
@@ -222,7 +229,7 @@ const CreateOrder = (props) => {
                   <Select
                     labelId="supplier"
                     id="select-supplier"
-                    value={supplierId}
+                    value={part.supplierId}
                     onChange={handleSupplierChange}
                     label="Supplier"
                   >

@@ -26,20 +26,23 @@ export default function UpdateCustomer(props) {
 
   // UPDATE ON id
   useEffect(() => {
-    async function getCustomerbyId() {
-      const res = await axios.get(`http://localhost:3001/clients/${id}`);
-      let data = res.data.response;
+    getCustomerbyId();
+  }, [id]);
 
+  async function getCustomerbyId() {
+    const res = await axios.get(`http://localhost:3001/clients/${id}`);
+    let data = res.data.response;
+    console.log(res);
+    if (data.length > 0) {
       setCustomer({
         name: data[0].c_name,
         phone: data[0].phone,
         email: data[0].email,
       });
-      console.log(data);
     }
-    getCustomerbyId();
-  }, [id]);
 
+    console.log(data);
+  }
   // HANDLE UPDATE
   async function updateCustomerDetails() {
     let res = await axios.put(`http://localhost:3001/clients/${id}`, {

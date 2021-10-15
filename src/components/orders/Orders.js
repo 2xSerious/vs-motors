@@ -26,6 +26,8 @@ function Orders() {
   }, [updateList]);
 
   function toggleUpdateList() {
+    setCustomerId("");
+    setVehicleId("");
     setUpdateList(!updateList);
   }
   // GET ORDER LIST
@@ -40,6 +42,7 @@ function Orders() {
   async function getCustomers() {
     const res = await axios.get("http://localhost:3001/clients");
     const data = res.data.response;
+
     setCustomers(data);
   }
 
@@ -83,7 +86,7 @@ function Orders() {
         toggle={toggle}
         toggleUpdate={toggleUpdateList}
       />
-      <GetOrderList orders={orders} />
+      <GetOrderList toggleUpdate={toggleUpdateList} orders={orders} />
     </MDBContainer>
   );
 }

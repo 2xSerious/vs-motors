@@ -34,7 +34,7 @@ export default function GetClientList(props) {
           <MDBTableBody>
             {props.customers.map((e) => {
               return (
-                <tr key={e.id} data-rowid={e.id} onClick={handler}>
+                <tr key={(e.id, e.c_name)} data-rowid={e.id} onClick={handler}>
                   <td>{(counter += 1)}</td>
                   <td>{e.c_name}</td>
                   <td>{e.phone}</td>

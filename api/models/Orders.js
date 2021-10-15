@@ -29,6 +29,11 @@ class Orders {
     return db.execute(sql);
   }
 
+  static deleteOrderById(id) {
+    let sql = `DELETE FROM orders WHERE id = '${id}'`;
+    return db.execute(sql);
+  }
+
   add() {
     let sql = `INSERT INTO orders
                    (created_at, vehicle_id)

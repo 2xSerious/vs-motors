@@ -15,16 +15,17 @@ function Customers() {
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
   const phoneRegex = /^[0-9]*$/;
   useEffect(() => {
-    async function getCustomers() {
-      const res = await axios.get("http://localhost:3001/clients/");
-      let data = res.data.response;
-      setCustomers(data);
-      console.log(data);
-    }
     getCustomers();
     setSubmit(false);
   }, [submit]);
 
+  async function getCustomers() {
+    const res = await axios.get("http://localhost:3001/clients/");
+    let data = res.data.response;
+    if (data.length > 0) {
+      setCustomers(data);
+    }
+  }
   // HANDLE INPUTS
   const handleChangeName = (e) => {
     setName(e.target.value);
