@@ -23,10 +23,18 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
+const PartModal = ({
+  modal,
+  toggleModal,
+  orderId,
+  parts,
+  partsList,
+  refresh,
+}) => {
   let count = 1;
   const [part, setPart] = useState({
     supplierId: 0,
+    quantity: 1,
     name: "",
     value: "",
     valueVat: 0,
@@ -37,6 +45,7 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
 
   useEffect(() => {
     getSuppliersList();
+    refresh();
   }, [modal]);
 
   // GET SUPPLIERS
@@ -53,6 +62,9 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
   }
   function handleChangeName(e) {
     setPart((prev) => ({ ...prev, name: e.target.value }));
+  }
+  function handleQuantity(e) {
+    setPart((prev) => ({ ...prev, quantity: e.target.value }));
   }
   function handleChangeValue(e) {
     const vRegex = /^\d+\.?\d{0,2}$/;
@@ -71,6 +83,7 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
   async function addPart() {
     let res = await axios.post("http://localhost:3001/parts/add", {
       name: part.name,
+      quantity: part.quantity,
       value: part.value,
       valueVat: part.valueVat,
       orderId: part.orderId,
@@ -80,6 +93,7 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
     if (res.status === 200) {
       partsList(part.orderId);
       setPart((prev) => ({ ...prev, name: "" }));
+      setPart((prev) => ({ ...prev, quantity: 1 }));
       setPart((prev) => ({ ...prev, value: "" }));
       setPart((prev) => ({ ...prev, valueVat: 0 }));
     }
@@ -130,6 +144,14 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
             <FormControl variant="standard" sx={{ m: 1, maxWidth: 100 }}>
               <InputLabel htmlFor="part">Part</InputLabel>
               <Input id="part" value={part.name} onChange={handleChangeName} />
+            </FormControl>
+            <FormControl variant="standard" sx={{ m: 1, maxWidth: 100 }}>
+              <InputLabel htmlFor="part">Quantity</InputLabel>
+              <Input
+                id="part"
+                value={part.quantity}
+                onChange={handleQuantity}
+              />
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, maxWidth: 60 }}>
               <InputLabel htmlFor="value">Value</InputLabel>

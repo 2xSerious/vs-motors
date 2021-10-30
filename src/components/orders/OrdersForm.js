@@ -23,6 +23,7 @@ const CreateOrder = (props) => {
 
   const [part, setPart] = useState({
     partName: "",
+    quantity: 1,
     partValue: "",
     partValueVat: "",
     supplierId: "",
@@ -53,7 +54,7 @@ const CreateOrder = (props) => {
     console.log(part.partValue);
 
     setParts((prev) => [...prev, part]);
-    setPart((prev) => ({ ...prev, partName: "", partValue: "" }));
+    setPart((prev) => ({ ...prev, partName: "", quantity: 1, partValue: "" }));
   }
   function removeFromPartList(e) {
     let name = e.target.getAttribute("name");
@@ -90,6 +91,9 @@ const CreateOrder = (props) => {
       return;
     }
   };
+  function handleQuantity(e) {
+    setPart((prev) => ({ ...prev, quantity: e.target.value }));
+  }
   function createdAtDate() {
     let d = new Date();
     let yyyy = d.getFullYear();
@@ -130,7 +134,6 @@ const CreateOrder = (props) => {
 
         setParts(newParts);
         postParts();
-        props.toggleUpdate();
       }
     } catch (error) {
       console.log(error);
@@ -147,14 +150,16 @@ const CreateOrder = (props) => {
         payload.parts.push(element);
       });
       let res = await axios.post("http://localhost:3001/parts", payload);
-      if (res.status === "200") {
-        setParts([]); // IF PARTS ADDED, RESET
+      if (res.status === 200) {
         setPart({
           partName: "",
+          quantity: 1,
           partValue: "",
           partValueVat: "",
           supplierId: "",
         }); // IF PARTS ADDED, RESET
+        setParts([]); // IF PARTS ADDED, RESET
+        props.toggleUpdate();
       }
       console.log(res);
     } catch (error) {
@@ -264,6 +269,19 @@ const CreateOrder = (props) => {
               </MDBCol>
               <MDBCol>
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
+                  <InputLabel id="quantity">Quantity</InputLabel>
+                  <Input
+                    id="standard-basic"
+                    label="Quantity"
+                    variant="standard"
+                    value={part.quantity}
+                    onChange={handleQuantity}
+                  />
+                  <FormHelperText>Required*</FormHelperText>
+                </FormControl>
+              </MDBCol>
+              <MDBCol>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
                   <InputLabel id="value">Value</InputLabel>
                   <Input
                     id="cost"
@@ -280,7 +298,7 @@ const CreateOrder = (props) => {
               </MDBCol>
               <MDBCol>
                 <MDBBtn
-                  className="my-2"
+                  className="mt-4"
                   color="success"
                   size="sm"
                   onClick={addToPartList}
@@ -290,7 +308,11 @@ const CreateOrder = (props) => {
               </MDBCol>
             </MDBRow>
           </form>
-          <OrderPartList onRemove={removeFromPartList} parts={parts} />
+          {parts ? (
+            <OrderPartList onRemove={removeFromPartList} parts={parts} />
+          ) : (
+            ""
+          )}
         </MDBModalBody>
         <MDBModalFooter>
           <MDBBtn color="secondary" onClick={props.toggle}>

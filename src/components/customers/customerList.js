@@ -18,6 +18,11 @@ export default function GetClientList(props) {
     setModal(!modal);
   };
 
+  function handlerRefresh() {
+    props.handleSubmit();
+    console.log("call");
+  }
+
   if (props.customers) {
     let counter = 0;
     return (
@@ -45,7 +50,7 @@ export default function GetClientList(props) {
           </MDBTableBody>
         </MDBTable>
         <UpdateCustomer
-          handleSubmit={props.handleSubmit}
+          handleSubmit={handlerRefresh}
           forId={id}
           modal={modal}
           toggle={toggle}

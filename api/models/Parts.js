@@ -1,8 +1,9 @@
 const db = require("../config/config");
 
 class Parts {
-  constructor(name, val, valvat, orderId, supplierId) {
+  constructor(name, quantity, val, valvat, orderId, supplierId) {
     this.name = name;
+    this.quantity = quantity;
     this.val = val;
     this.valvat = valvat;
     this.orderId = orderId;
@@ -14,8 +15,9 @@ class Parts {
   }
 
   insertPart() {
-    let sql = `INSERT INTO parts (p_name, cost, cost_vat, order_id, supplier_id) VALUES (
+    let sql = `INSERT INTO parts (p_name, quantity, cost, cost_vat, order_id, supplier_id) VALUES (
       '${this.name}',
+      '${this.quantity}',
       '${this.val}',
       '${this.valvat}',
       '${this.orderId}',

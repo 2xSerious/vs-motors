@@ -111,6 +111,7 @@ export default function GetOrderList(props) {
           orderId={orderID}
           parts={parts}
           partsList={getPartsList}
+          refresh={props.refresh}
         />
       </MDBContainer>
     );

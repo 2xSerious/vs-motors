@@ -86,7 +86,11 @@ function Orders() {
         toggle={toggle}
         toggleUpdate={toggleUpdateList}
       />
-      <GetOrderList toggleUpdate={toggleUpdateList} orders={orders} />
+      <GetOrderList
+        toggleUpdate={toggleUpdateList}
+        orders={orders}
+        refresh={getOrdersList}
+      />
     </MDBContainer>
   );
 }

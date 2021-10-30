@@ -2,8 +2,16 @@ const Clients = require("../models/Clients");
 
 exports.createNewClient = async (req, res, next) => {
   try {
-    let { cName, phone, email } = req.body;
-    let client = new Clients(cName, phone, email);
+    let { cName, phone, email, address, city, postcode, country } = req.body;
+    let client = new Clients(
+      cName,
+      phone,
+      email,
+      address,
+      city,
+      postcode,
+      country
+    );
     await client.add();
     res.status(201).json({ message: "Client created!" });
   } catch (error) {
@@ -36,8 +44,16 @@ exports.getClientById = async (req, res, next) => {
 exports.updateCustomerRecord = async (req, res, next) => {
   try {
     let id = req.params.id;
-    let { cName, phone, email } = req.body;
-    let client = new Clients(cName, phone, email);
+    let { cName, phone, email, address, city, postcode, country } = req.body;
+    let client = new Clients(
+      cName,
+      phone,
+      email,
+      address,
+      city,
+      postcode,
+      country
+    );
     await client.update(id);
     res.status(201).json({ message: "Record updated!" });
   } catch (error) {

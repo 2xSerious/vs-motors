@@ -10,6 +10,8 @@ import Vehicles from "./components/vehicles/Vehicles";
 import Orders from "./components/orders/Orders";
 import Services from "./components/service-sheet/Services";
 
+import InvoiceViewer from "./components/invoice/Viewer";
+
 function App() {
   return (
     <Router>
@@ -23,6 +25,7 @@ function App() {
             <Route path="/vehicles" component={Vehicles} />
             <Route path="/orders" component={Orders} />
             <Route path="/services" component={Services} />
+            <Route path="/home" component={InvoiceViewer} />
           </Switch>
         </div>
       </div>

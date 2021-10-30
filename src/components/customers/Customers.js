@@ -9,6 +9,10 @@ function Customers() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postcode, setPostcode] = useState("");
+  const [country, setCountry] = useState("");
   const [submit, setSubmit] = useState(false);
   const [validation, setValidation] = useState(true);
 
@@ -16,7 +20,6 @@ function Customers() {
   const phoneRegex = /^[0-9]*$/;
   useEffect(() => {
     getCustomers();
-    setSubmit(false);
   }, [submit]);
 
   async function getCustomers() {
@@ -24,6 +27,8 @@ function Customers() {
     let data = res.data.response;
     if (data.length > 0) {
       setCustomers(data);
+    } else {
+      setCustomers([]);
     }
   }
   // HANDLE INPUTS
@@ -50,6 +55,39 @@ function Customers() {
       return false;
     }
   };
+  const handleChangeAddress = (e) => {
+    setAddress(e.target.value);
+  };
+  const handleChangeCity = (e) => {
+    let val = e.target.value;
+    let str;
+    if (val !== "") {
+      str = val[0].toUpperCase() + val.substring(1).toLowerCase();
+    } else {
+      str = "";
+    }
+    setCity(str);
+  };
+  const handleChangePostcode = (e) => {
+    let val = e.target.value;
+    let str;
+    if (val !== "") {
+      str = val.toUpperCase();
+    } else {
+      str = "";
+    }
+    setPostcode(str);
+  };
+  const handleChangeCountry = (e) => {
+    let val = e.target.value;
+    let str;
+    if (val !== "") {
+      str = val[0].toUpperCase() + val.substring(1).toLowerCase();
+    } else {
+      str = "";
+    }
+    setCountry(str);
+  };
 
   // HANDLE SUBMIT
   const handleSubmit = (e) => {
@@ -66,11 +104,13 @@ function Customers() {
     }
     insertClient(); // create user API
     clearFields(); // Clear input fields
+
     toggleSubmit(); // Update list After Submit
   };
 
   function toggleSubmit() {
     setSubmit(!submit);
+    console.log(submit);
   }
 
   async function insertClient() {
@@ -79,6 +119,10 @@ function Customers() {
         cName: name,
         phone: phone,
         email: email,
+        address: address,
+        city: city,
+        postcode: postcode,
+        country: country,
       });
     } catch (error) {
       alert("Customer already exist");
@@ -89,6 +133,10 @@ function Customers() {
     setName("");
     setPhone("");
     setEmail("");
+    setAddress("");
+    setCity("");
+    setPostcode("");
+    setCountry("");
   }
 
   return (
@@ -103,10 +151,18 @@ function Customers() {
         onNameChange={handleChangeName}
         onPhoneChange={handleChangePhone}
         onEmailChange={handleChangeEmail}
+        onAddressChange={handleChangeAddress}
+        onCityChange={handleChangeCity}
+        onPostcodeChange={handleChangePostcode}
+        onCountryChange={handleChangeCountry}
         onSubmit={handleSubmit}
         name={name}
         phone={phone}
         email={email}
+        address={address}
+        city={city}
+        postcode={postcode}
+        country={country}
       />
       <GetClientList handleSubmit={toggleSubmit} customers={customers} />,
     </MDBContainer>

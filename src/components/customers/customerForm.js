@@ -51,6 +51,58 @@ const CreateClient = (props) => {
               <div className="invalid-feedback">"example@example.com"</div>
             </MDBInput>
           </MDBCol>
+          <MDBCol md="4">
+            <MDBInput
+              className="form-control"
+              value={props.address}
+              name="address"
+              onChange={props.onAddressChange}
+              type="address"
+              label="Adress"
+            >
+              <div className="valid-feedback">Looks Good!</div>
+              <div className="invalid-feedback"></div>
+            </MDBInput>
+          </MDBCol>
+          <MDBCol md="4">
+            <MDBInput
+              className="form-control"
+              value={props.city}
+              name="city"
+              onChange={props.onCityChange}
+              type="text"
+              label="City"
+            >
+              <div className="valid-feedback">Looks Good!</div>
+              <div className="invalid-feedback"></div>
+            </MDBInput>
+          </MDBCol>
+          <MDBCol md="4">
+            <MDBInput
+              className="form-control"
+              value={props.postcode}
+              name="postcode"
+              onChange={props.onPostcodeChange}
+              type="text"
+              label="Postcode"
+            >
+              <div className="valid-feedback">Looks Good!</div>
+              <div className="invalid-feedback"></div>
+            </MDBInput>
+          </MDBCol>
+          <MDBCol md="4">
+            <MDBInput
+              className="form-control"
+              value={props.country}
+              name="country"
+              onChange={props.onCountryChange}
+              type="text"
+              label="Country"
+            >
+              <div className="valid-feedback">Looks Good!</div>
+              <div className="invalid-feedback"></div>
+            </MDBInput>
+          </MDBCol>
         </MDBRow>
         <MDBBtn color="success" type="submit">
           Add

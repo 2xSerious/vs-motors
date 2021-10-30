@@ -16,6 +16,7 @@ export default function OrderPartList(props) {
                 <td>
                   <strong>{e.partName}</strong>
                 </td>
+                <td>{e.quantity}</td>
                 <td>£{e.partValue}</td>
                 <td>
                   <MDBIcon
