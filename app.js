@@ -12,6 +12,7 @@ app.use("/workers", require("./routes/workersRoutes"));
 app.use("/vehicles", require("./routes/vehicleRoutes"));
 app.use("/orders/", require("./routes/ordersRoutes"));
 app.use("/parts", require("./routes/partsRoutes"));
+app.use("/services", require("./routes/serviceRoutes"));
 
 app.use((err, req, res, next) => {
   console.log(err.stack);

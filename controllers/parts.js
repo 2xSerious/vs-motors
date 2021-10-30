@@ -17,6 +17,7 @@ exports.insertBulkParts = async (req, res, next) => {
     body.forEach((e) => {
       let part = new Parts(
         e.partName,
+        e.quantity,
         e.partValue,
         e.partValueVat,
         e.orderId,
@@ -34,8 +35,8 @@ exports.insertBulkParts = async (req, res, next) => {
 
 exports.insertPart = async (req, res, next) => {
   try {
-    let { name, value, valueVat, orderId, supplierId } = req.body;
-    let part = new Parts(name, value, valueVat, orderId, supplierId);
+    let { name, quantity, value, valueVat, orderId, supplierId } = req.body;
+    let part = new Parts(name, quantity, value, valueVat, orderId, supplierId);
     console.log(req.body);
     part.insertPart();
     res.status(200).json({ message: "Success" });
