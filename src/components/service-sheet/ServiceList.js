@@ -7,7 +7,6 @@ import InvoiceModal from "./InvoiceModal";
 const ServiceList = ({ didrefresh }) => {
   const [serviceList, setServiceList] = useState([]);
   const [currentService, setCurrentService] = useState("");
-  const [serviceId, setServiceId] = useState("");
   const [isModal, setIsModal] = useState(false);
 
   const [invoiceModal, setInvoiceModal] = useState(false);
@@ -40,7 +39,6 @@ const ServiceList = ({ didrefresh }) => {
   // Current Service Id
   function handleServiceId(e) {
     let id = e.currentTarget.getAttribute("id");
-    setServiceId(id);
     toggle();
     findIndex(id);
   }
@@ -48,7 +46,6 @@ const ServiceList = ({ didrefresh }) => {
 
   function handleInvoiceModalId(e) {
     let id = e.currentTarget.getAttribute("data-id");
-    setServiceId(id);
     toggleInvoiceModal();
     findIndex(id);
   }

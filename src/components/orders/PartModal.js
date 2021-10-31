@@ -52,7 +52,7 @@ const PartModal = ({
       refresh();
     }
     getSuppliersList();
-  }, [modal]);
+  }, [modal, orderId, refresh]);
 
   // HANDLER PART STATE
   function handleChangeSupplier(e) {
