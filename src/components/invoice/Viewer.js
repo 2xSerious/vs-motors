@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import Invoice from "./Invoice";
 // import logo from './logo.svg';

@@ -33,6 +33,12 @@ const CreateOrder = (props) => {
   const status = "open";
 
   useEffect(() => {
+    const handleVehicle = () => {
+      console.log(props.customerId);
+      if (props.customerId) {
+        getVehicles(props.customerId);
+      }
+    };
     handleVehicle();
   }, [props.customerId]);
 
@@ -62,12 +68,7 @@ const CreateOrder = (props) => {
   }
 
   // HANDLERS
-  const handleVehicle = () => {
-    console.log(props.customerId);
-    if (props.customerId) {
-      getVehicles(props.customerId);
-    }
-  };
+
   const handleSupplierChange = (e) => {
     const id = e.target.value;
     setPart((prev) => ({ ...prev, supplierId: id }));

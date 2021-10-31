@@ -21,8 +21,6 @@ const ServiceList = ({ didrefresh }) => {
   async function getServiceList() {
     let res = await axios.get("http://localhost:3001/services");
     let data = res.data.response;
-    console.log(data);
-    console.log(res);
     setServiceList(data);
   }
   // Helper sum function
@@ -56,7 +54,8 @@ const ServiceList = ({ didrefresh }) => {
   }
 
   function findIndex(id) {
-    const index = serviceList.findIndex((e) => e.id == id);
+    let fid = parseInt(id);
+    const index = serviceList.findIndex((e) => e.id === fid);
     setCurrentService(serviceList[index]);
   }
 

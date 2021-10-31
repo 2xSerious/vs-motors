@@ -44,17 +44,15 @@ const PartModal = ({
   const [suppliers, setSuppliers] = useState();
 
   useEffect(() => {
+    async function getSuppliersList() {
+      const res = await axios.get("http://localhost:3001/suppliers");
+      const data = res.data.response;
+      setSuppliers(data);
+      setPart((prev) => ({ ...prev, orderId: orderId }));
+      refresh();
+    }
     getSuppliersList();
-    refresh();
   }, [modal]);
-
-  // GET SUPPLIERS
-  async function getSuppliersList() {
-    const res = await axios.get("http://localhost:3001/suppliers");
-    const data = res.data.response;
-    setSuppliers(data);
-    setPart((prev) => ({ ...prev, orderId: orderId }));
-  }
 
   // HANDLER PART STATE
   function handleChangeSupplier(e) {

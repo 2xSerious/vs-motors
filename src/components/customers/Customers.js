@@ -16,7 +16,7 @@ function Customers() {
   const [submit, setSubmit] = useState(false);
   const [validation, setValidation] = useState(true);
 
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,})+$/;
   const phoneRegex = /^[0-9]*$/;
   useEffect(() => {
     getCustomers();

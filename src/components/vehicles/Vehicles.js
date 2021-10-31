@@ -12,7 +12,6 @@ function Vehicles() {
   const [reg, setReg] = useState("");
   const [owner, setOwner] = useState("");
   const [submit, setSubmit] = useState(false);
-  const [validation, setValidation] = useState(true);
 
   useEffect(() => {
     async function getVehicles() {
@@ -50,7 +49,6 @@ function Vehicles() {
   // HANDLE SUBMIT
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(validation);
     if (!make || !model || !year || !reg || !owner) {
       e.target.className += " was-validated";
       return;

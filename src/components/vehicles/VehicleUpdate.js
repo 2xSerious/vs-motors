@@ -33,25 +33,25 @@ export default function UpdateVehicle(props) {
 
   // UPDATE ON id
   useEffect(() => {
+    async function getVehiclebyId() {
+      const res = await axios.get(`http://localhost:3001/vehicles/${id}`);
+      let data = res.data.response;
+      console.log(data);
+      if (data.length > 0) {
+        setVehicle({
+          make: data[0].make,
+          model: data[0].model,
+          year: data[0].year,
+          reg: data[0].reg_num,
+          ownerId: data[0].customer_id,
+        });
+      } else {
+        return;
+      }
+    }
     getVehiclebyId();
   }, [id]);
 
-  async function getVehiclebyId() {
-    const res = await axios.get(`http://localhost:3001/vehicles/${id}`);
-    let data = res.data.response;
-    console.log(data);
-    if (data.length > 0) {
-      setVehicle({
-        make: data[0].make,
-        model: data[0].model,
-        year: data[0].year,
-        reg: data[0].reg_num,
-        ownerId: data[0].customer_id,
-      });
-    } else {
-      return;
-    }
-  }
   // HANDLE UPDATE
   async function updateVehicleDetails() {
     let res = await axios.put(`http://localhost:3001/vehicles/${id}`, {

@@ -1,29 +1,22 @@
 import React, { useState, useEffect } from "react";
 import InvoiceViewer from "../invoice/Viewer";
-import {
-  MDBContainer,
-  MDBBtn,
-  MDBModal,
-  MDBModalBody,
-  MDBModalHeader,
-  MDBModalFooter,
-} from "mdbreact";
+import { MDBContainer, MDBModal, MDBModalBody, MDBModalHeader } from "mdbreact";
 import axios from "axios";
 const InvoiceModal = ({ toggle, isModal, service }) => {
   const [parts, setParts] = useState([]);
 
   useEffect(() => {
+    async function getPartsByOrderId(id) {
+      let res = await axios.get(`http://localhost:3001/parts/order/${id}`);
+      let data = res.data.parts;
+      console.log(data);
+      setParts(data);
+    }
     if (service) {
       getPartsByOrderId(service.orderID);
     }
-  }, []);
+  }, [service]);
 
-  async function getPartsByOrderId(id) {
-    let res = await axios.get(`http://localhost:3001/parts/order/${id}`);
-    let data = res.data.parts;
-    console.log(data);
-    setParts(data);
-  }
   console.log(service);
   console.log(parts);
   return (

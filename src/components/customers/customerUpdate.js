@@ -23,36 +23,35 @@ export default function UpdateCustomer(props) {
     country: true,
   });
 
-  const id = props.forId;
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,})+$/;
   const phoneRegex = /^[0-9]*$/;
 
   // UPDATE ON id
   useEffect(() => {
-    getCustomerbyId();
-  }, [id]);
-
-  async function getCustomerbyId() {
-    const res = await axios.get(`http://localhost:3001/clients/${id}`);
-    let data = res.data.response;
-    console.log(res);
-    if (data.length > 0) {
-      setCustomer({
-        name: data[0].c_name,
-        phone: data[0].phone,
-        email: data[0].email,
-        address: data[0].street_address,
-        city: data[0].city,
-        postcode: data[0].postcode,
-        country: data[0].country,
-      });
+    async function getCustomerbyId() {
+      const res = await axios.get(
+        `http://localhost:3001/clients/${props.forId}`
+      );
+      let data = res.data.response;
+      console.log(res);
+      if (data.length > 0) {
+        setCustomer({
+          name: data[0].c_name,
+          phone: data[0].phone,
+          email: data[0].email,
+          address: data[0].street_address,
+          city: data[0].city,
+          postcode: data[0].postcode,
+          country: data[0].country,
+        });
+      }
     }
+    getCustomerbyId();
+  }, [props.forId]);
 
-    console.log(data);
-  }
   // HANDLE UPDATE
   async function updateCustomerDetails() {
-    let res = await axios.put(`http://localhost:3001/clients/${id}`, {
+    let res = await axios.put(`http://localhost:3001/clients/${props.forId}`, {
       cName: customer.name,
       phone: customer.phone,
       email: customer.email,
@@ -66,7 +65,7 @@ export default function UpdateCustomer(props) {
   // HANDLE DELTE
   async function deleteCustomer() {
     await axios
-      .delete(`http://localhost:3001/clients/${id}`)
+      .delete(`http://localhost:3001/clients/${props.forId}`)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
       .then(() => {

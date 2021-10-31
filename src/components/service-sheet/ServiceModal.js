@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBContainer,
   MDBBtn,
@@ -45,7 +45,7 @@ const ServiceModal = ({ toggle, isModal, service }) => {
     if (service.paid_id) {
       setPaidType(service.paid_id);
     }
-  }, [toggle]);
+  }, [toggle, service]);
 
   async function update() {
     let res = await axios.put("http://localhost:3001/services", {
