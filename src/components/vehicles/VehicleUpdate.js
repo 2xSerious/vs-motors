@@ -34,7 +34,9 @@ export default function UpdateVehicle(props) {
   // UPDATE ON id
   useEffect(() => {
     async function getVehiclebyId() {
-      const res = await axios.get(`http://localhost:3001/vehicles/${id}`);
+      const res = await axios.get(
+        `https://vs-motors.herokuapp.com/vehicles/${id}`
+      );
       let data = res.data.response;
       console.log(data);
       if (data.length > 0) {
@@ -54,19 +56,22 @@ export default function UpdateVehicle(props) {
 
   // HANDLE UPDATE
   async function updateVehicleDetails() {
-    let res = await axios.put(`http://localhost:3001/vehicles/${id}`, {
-      make: vehicle.make,
-      model: vehicle.model,
-      year: vehicle.year,
-      reg: vehicle.reg,
-      owner: vehicle.ownerId,
-    });
+    let res = await axios.put(
+      `https://vs-motors.herokuapp.com/vehicles/${id}`,
+      {
+        make: vehicle.make,
+        model: vehicle.model,
+        year: vehicle.year,
+        reg: vehicle.reg,
+        owner: vehicle.ownerId,
+      }
+    );
     console.log(res);
   }
   // HANDLE DELTE
   async function deleteVehicle() {
     console.log(id);
-    await axios.delete(`http://localhost:3001/vehicles/${id}`);
+    await axios.delete(`https://vs-motors.herokuapp.com/vehicles/${id}`);
     props.handleSubmit();
   }
 

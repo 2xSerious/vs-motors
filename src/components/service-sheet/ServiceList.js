@@ -18,7 +18,7 @@ const ServiceList = ({ didrefresh }) => {
   }, [isModal, didrefresh]);
 
   async function getServiceList() {
-    let res = await axios.get("http://localhost:3001/services");
+    let res = await axios.get("https://vs-motors.herokuapp.com/services");
     let data = res.data.response;
     setServiceList(data);
   }

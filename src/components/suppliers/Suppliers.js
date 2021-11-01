@@ -12,7 +12,7 @@ function Suppliers() {
 
   useEffect(() => {
     async function getSuppliers() {
-      const res = await axios.get("http://localhost:3001/suppliers/");
+      const res = await axios.get("https://vs-motors.herokuapp.com/suppliers/");
       let data = res.data.response;
       setSuppliers(data);
       console.log(data);
@@ -45,7 +45,7 @@ function Suppliers() {
 
   async function insertSupplier() {
     try {
-      await axios.post("http://localhost:3001/suppliers/", {
+      await axios.post("https://vs-motors.herokuapp.com/suppliers/", {
         sName: name,
       });
     } catch (error) {

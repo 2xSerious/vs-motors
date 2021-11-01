@@ -39,14 +39,14 @@ function CreateService({ toggle, isModal, refresh }) {
 
   // Get order list
   async function getOrders() {
-    let res = await axios.get("http://localhost:3001/orders");
+    let res = await axios.get("https://vs-motors.herokuapp.com/orders");
     let data = res.data.orders;
     setOrders(data);
   }
 
   // Get worker list
   async function getWorkers() {
-    let res = await axios.get("http://localhost:3001/workers");
+    let res = await axios.get("https://vs-motors.herokuapp.com/workers");
     let data = res.data.response;
     setWorkers(data);
   }
@@ -72,7 +72,7 @@ function CreateService({ toggle, isModal, refresh }) {
 
   // Prepare post
   async function postService() {
-    let post = await axios.post("http://localhost:3001/services", {
+    let post = await axios.post("https://vs-motors.herokuapp.com/services", {
       date: new Date(),
       orderId: orderID,
       odometer: service.odometer,

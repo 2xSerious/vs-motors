@@ -11,7 +11,7 @@ import { confirmAlert } from "react-confirm-alert";
 
 export default function GetSupplierList(props) {
   async function deleteSupplier(id) {
-    await axios.delete(`http://localhost:3001/suppliers/${id}`);
+    await axios.delete(`https://vs-motors.herokuapp.com/suppliers/${id}`);
     props.handleSubmit();
   }
 

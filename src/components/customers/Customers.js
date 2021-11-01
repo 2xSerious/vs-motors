@@ -23,7 +23,7 @@ function Customers() {
   }, [submit]);
 
   async function getCustomers() {
-    const res = await axios.get("http://localhost:3001/clients/");
+    const res = await axios.get("https://vs-motors.herokuapp.com/clients");
     let data = res.data.response;
     if (data.length > 0) {
       setCustomers(data);

@@ -28,7 +28,7 @@ const CreateVehicle = (props) => {
   }
 
   async function getOwners() {
-    const res = await axios.get("http://localhost:3001/clients");
+    const res = await axios.get("https://vs-motors.herokuapp.com/clients");
     let data = res.data.response;
     data.sort((a, b) => a.c_name > b.c_name);
     setOwners(data);

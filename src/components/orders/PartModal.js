@@ -45,7 +45,7 @@ const PartModal = ({
 
   useEffect(() => {
     async function getSuppliersList() {
-      const res = await axios.get("http://localhost:3001/suppliers");
+      const res = await axios.get("https://vs-motors.herokuapp.com/suppliers");
       const data = res.data.response;
       setSuppliers(data);
       setPart((prev) => ({ ...prev, orderId: orderId }));
@@ -79,7 +79,7 @@ const PartModal = ({
     addPart();
   }
   async function addPart() {
-    let res = await axios.post("http://localhost:3001/parts/add", {
+    let res = await axios.post("https://vs-motors.herokuapp.com/parts/add", {
       name: part.name,
       quantity: part.quantity,
       value: part.value,
@@ -106,7 +106,7 @@ const PartModal = ({
   }
 
   async function deletePart(id) {
-    let res = await axios.delete(`http://localhost:3001/parts/${id}`);
+    let res = await axios.delete(`https://vs-motors.herokuapp.com/parts/${id}`);
     if (res.status === 200) {
       partsList(part.orderId);
     }

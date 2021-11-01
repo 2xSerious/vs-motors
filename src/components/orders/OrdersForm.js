@@ -45,7 +45,7 @@ const CreateOrder = (props) => {
   // GET VEHICLES BY CUSTOMER ID
   async function getVehicles(id) {
     const res = await axios.get(
-      `http://localhost:3001/vehicles/customer/${id}`
+      `https://vs-motors.herokuapp.com/vehicles/customer/${id}`
     );
     const data = res.data.response;
     console.log(data);
@@ -115,14 +115,16 @@ const CreateOrder = (props) => {
   async function postOrder() {
     let d = createdAtDate();
     try {
-      let res = await axios.post("http://localhost:3001/orders", {
+      let res = await axios.post("https://vs-motors.herokuapp.com/orders", {
         date: d,
         vehicleId: props.vehicleId,
         status: status,
       });
       console.log(res);
       if (res.statusText === "Created") {
-        let response = await axios.get("http://localhost:3001/orders");
+        let response = await axios.get(
+          "https://vs-motors.herokuapp.com/orders"
+        );
         let orders = response.data.orders;
         let orderId = orders[orders.length - 1];
         let lastId = orderId.orderID;
@@ -150,7 +152,10 @@ const CreateOrder = (props) => {
       parts.forEach((element) => {
         payload.parts.push(element);
       });
-      let res = await axios.post("http://localhost:3001/parts", payload);
+      let res = await axios.post(
+        "https://vs-motors.herokuapp.com/parts",
+        payload
+      );
       if (res.status === 200) {
         setPart({
           partName: "",

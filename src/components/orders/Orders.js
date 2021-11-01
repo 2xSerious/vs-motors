@@ -32,7 +32,7 @@ function Orders() {
   }
   // GET ORDER LIST
   async function getOrdersList() {
-    const res = await axios.get("http://localhost:3001/orders");
+    const res = await axios.get("https://vs-motors.herokuapp.com/orders");
     let data = res.data.orders;
     console.log(data);
     setOrders(data);
@@ -40,7 +40,7 @@ function Orders() {
 
   // GET CUSTOMER LIST
   async function getCustomers() {
-    const res = await axios.get("http://localhost:3001/clients");
+    const res = await axios.get("https://vs-motors.herokuapp.com/clients");
     const data = res.data.response;
 
     setCustomers(data);
@@ -48,7 +48,7 @@ function Orders() {
 
   // GET SUPPLIER LIST
   async function getSuppliers() {
-    const res = await axios.get("http://localhost:3001/suppliers");
+    const res = await axios.get("https://vs-motors.herokuapp.com/suppliers");
     const data = res.data.response;
     setSuppliers(data);
   }

@@ -30,7 +30,7 @@ export default function UpdateCustomer(props) {
   useEffect(() => {
     async function getCustomerbyId() {
       const res = await axios.get(
-        `http://localhost:3001/clients/${props.forId}`
+        `https://vs-motors.herokuapp.com/clients/${props.forId}`
       );
       let data = res.data.response;
       console.log(res);
@@ -51,21 +51,24 @@ export default function UpdateCustomer(props) {
 
   // HANDLE UPDATE
   async function updateCustomerDetails() {
-    let res = await axios.put(`http://localhost:3001/clients/${props.forId}`, {
-      cName: customer.name,
-      phone: customer.phone,
-      email: customer.email,
-      address: customer.address,
-      city: customer.city,
-      postcode: customer.postcode,
-      country: customer.country,
-    });
+    let res = await axios.put(
+      `https://vs-motors.herokuapp.com/clients/${props.forId}`,
+      {
+        cName: customer.name,
+        phone: customer.phone,
+        email: customer.email,
+        address: customer.address,
+        city: customer.city,
+        postcode: customer.postcode,
+        country: customer.country,
+      }
+    );
     console.log(res);
   }
   // HANDLE DELTE
   async function deleteCustomer() {
     await axios
-      .delete(`http://localhost:3001/clients/${props.forId}`)
+      .delete(`https://vs-motors.herokuapp.com/clients/${props.forId}`)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
       .then(() => {

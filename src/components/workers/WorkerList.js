@@ -11,7 +11,7 @@ import { confirmAlert } from "react-confirm-alert";
 
 export default function GetWorkerList(props) {
   async function deleteWorker(id) {
-    await axios.delete(`http://localhost:3001/workers/${id}`);
+    await axios.delete(`https://vs-motors.herokuapp.com/workers/${id}`);
     props.handleSubmit();
   }
 

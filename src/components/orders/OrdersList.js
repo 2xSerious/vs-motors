@@ -19,13 +19,17 @@ export default function GetOrderList(props) {
   }
 
   async function getPartsList(id) {
-    let res = await axios.get(`http://localhost:3001/parts/order/${id}`);
+    let res = await axios.get(
+      `https://vs-motors.herokuapp.com/parts/order/${id}`
+    );
     let data = res.data.parts;
     console.log(data);
     setParts(data);
   }
   async function deleteOrderById(id) {
-    let res = await axios.delete(`http://localhost:3001/orders/${id}`);
+    let res = await axios.delete(
+      `https://vs-motors.herokuapp.com/orders/${id}`
+    );
     console.log(res);
     props.toggleUpdate();
   }

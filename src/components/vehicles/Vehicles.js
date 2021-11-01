@@ -15,7 +15,7 @@ function Vehicles() {
 
   useEffect(() => {
     async function getVehicles() {
-      const res = await axios.get("http://localhost:3001/vehicles/");
+      const res = await axios.get("https://vs-motors.herokuapp.com/vehicles/");
       let data = res.data.response;
       setVehicles(data);
       console.log(data);
@@ -64,7 +64,7 @@ function Vehicles() {
 
   async function insertVehicle() {
     try {
-      await axios.post("http://localhost:3001/vehicles/", {
+      await axios.post("https://vs-motors.herokuapp.com/vehicles/", {
         make: make,
         model: model,
         year: year,

@@ -48,7 +48,7 @@ const ServiceModal = ({ toggle, isModal, service }) => {
   }, [toggle, service]);
 
   async function update() {
-    let res = await axios.put("http://localhost:3001/services", {
+    let res = await axios.put("https://vs-motors.herokuapp.com/services", {
       id: service.id,
       work: workUpdate,
       paidStatus: paidStatus,
@@ -57,7 +57,7 @@ const ServiceModal = ({ toggle, isModal, service }) => {
     console.log(res);
   }
   async function getPaidTypes() {
-    let res = await axios.get("http://localhost:3001/services/types");
+    let res = await axios.get("https://vs-motors.herokuapp.com/services/types");
     let data = res.data.response;
     setPaidTypes(data);
   }

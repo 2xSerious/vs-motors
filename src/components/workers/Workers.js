@@ -45,7 +45,7 @@ function Workers() {
 
   async function insertWorker() {
     try {
-      await axios.post("http://localhost:3001/workers/", {
+      await axios.post("https://vs-motors.herokuapp.com/workers/", {
         wName: name,
       });
     } catch (error) {

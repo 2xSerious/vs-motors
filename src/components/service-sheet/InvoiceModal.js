@@ -7,7 +7,9 @@ const InvoiceModal = ({ toggle, isModal, service }) => {
 
   useEffect(() => {
     async function getPartsByOrderId(id) {
-      let res = await axios.get(`http://localhost:3001/parts/order/${id}`);
+      let res = await axios.get(
+        `https://vs-motors.herokuapp.com/parts/order/${id}`
+      );
       let data = res.data.parts;
       console.log(data);
       setParts(data);
