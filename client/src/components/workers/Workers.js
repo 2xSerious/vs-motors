@@ -12,7 +12,7 @@ function Workers() {
 
   useEffect(() => {
     async function getWorkers() {
-      const res = await axios.get("http://localhost:3001/workers/");
+      const res = await axios.get("https://vs-motors.herokuapp.com/workers/");
       let data = res.data.response;
       setWorkers(data);
       console.log(data);

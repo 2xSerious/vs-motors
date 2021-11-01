@@ -1,5 +1,6 @@
 {
   "name": "vs-motors",
+  "homepage": "https://vs-motors.teodordev.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
