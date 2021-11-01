@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBInput } from "mdbreact";
 
 const CreateClient = (props) => {

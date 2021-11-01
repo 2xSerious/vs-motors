@@ -1,4 +1,3 @@
-import React from "react";
 import { View, StyleSheet } from "@react-pdf/renderer";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";

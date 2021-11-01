@@ -1,4 +1,3 @@
-import React, { Fragment } from "react";
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({

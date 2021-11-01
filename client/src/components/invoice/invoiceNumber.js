@@ -1,4 +1,3 @@
-import React, { Fragment } from "react";
 import { Text, View, StyleSheet } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
     fontStyle: "bold",
   },
   label: {
-    width: 60, 
+    width: 60,
   },
 });
 

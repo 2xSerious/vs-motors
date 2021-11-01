@@ -1,4 +1,3 @@
-import React from "react";
 import { Page, Document, Image, StyleSheet } from "@react-pdf/renderer";
 import InvoiceTitle from "./InvoiceTitle";
 import logo from "../../images/logo2.png";

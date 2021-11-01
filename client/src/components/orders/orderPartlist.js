@@ -1,5 +1,4 @@
 import { MDBContainer, MDBTable, MDBTableBody, MDBIcon } from "mdbreact";
-import React from "react";
 
 export default function OrderPartList(props) {
   var count = 0;
