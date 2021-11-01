@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MDBTable, MDBTableBody, MDBTableHead, MDBIcon } from "mdbreact";
 import axios from "axios";
 import ServiceModal from "./ServiceModal";

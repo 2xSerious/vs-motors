@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import InvoiceViewer from "../invoice/Viewer";
 import { MDBContainer, MDBModal, MDBModalBody, MDBModalHeader } from "mdbreact";
 import axios from "axios";

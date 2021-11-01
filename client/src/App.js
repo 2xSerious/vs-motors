@@ -1,6 +1,4 @@
-// import "./App.css";
-import React from "react";
-
+// import "./App.css";git a
 import Header from "./components/Header";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Customers from "./components/customers/Customers";

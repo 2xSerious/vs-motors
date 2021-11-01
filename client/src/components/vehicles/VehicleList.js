@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { MDBContainer, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import UpdateVehicle from "./VehicleUpdate";
