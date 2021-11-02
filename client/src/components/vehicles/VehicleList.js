@@ -21,7 +21,7 @@ export default function GetVehicleList(props) {
     setModal(!modal);
   };
 
-  if (props.vehicles) {
+  if (props.vehicles.length > 0) {
     let counter = 0;
     return (
       <MDBContainer className="mt-5">

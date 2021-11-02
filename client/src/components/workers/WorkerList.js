@@ -40,7 +40,7 @@ export default function GetWorkerList(props) {
     handleDelete(value);
   };
 
-  if (props.workers) {
+  if (props.workers.length > 0) {
     let counter = 0;
     return (
       <MDBContainer className="mt-5">

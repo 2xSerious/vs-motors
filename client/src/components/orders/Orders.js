@@ -7,7 +7,6 @@ import CreateOrder from "./OrdersForm";
 import GetOrderList from "./OrdersList";
 
 function Orders() {
-  const [orders, setOrders] = useState([]);
   const [customers, setCustomers] = useState([]);
 
   const [suppliers, setSuppliers] = useState([]);
@@ -20,7 +19,6 @@ function Orders() {
   const [updateList, setUpdateList] = useState(false);
 
   useEffect(() => {
-    getOrdersList();
     getCustomers();
     getSuppliers();
   }, [updateList]);
@@ -29,13 +27,6 @@ function Orders() {
     setCustomerId("");
     setVehicleId("");
     setUpdateList(!updateList);
-  }
-  // GET ORDER LIST
-  async function getOrdersList() {
-    const res = await axios.get("https://vs-motors.herokuapp.com/orders");
-    let data = res.data.orders;
-    console.log(data);
-    setOrders(data);
   }
 
   // GET CUSTOMER LIST
@@ -86,11 +77,7 @@ function Orders() {
         toggle={toggle}
         toggleUpdate={toggleUpdateList}
       />
-      <GetOrderList
-        toggleUpdate={toggleUpdateList}
-        orders={orders}
-        refresh={getOrdersList}
-      />
+      <GetOrderList toggleUpdate={toggleUpdateList} update={updateList} />
     </MDBContainer>
   );
 }

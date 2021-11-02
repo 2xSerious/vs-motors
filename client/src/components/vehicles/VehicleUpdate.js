@@ -66,7 +66,6 @@ export default function UpdateVehicle(props) {
         owner: vehicle.ownerId,
       }
     );
-    console.log(res);
   }
   // HANDLE DELTE
   async function deleteVehicle() {

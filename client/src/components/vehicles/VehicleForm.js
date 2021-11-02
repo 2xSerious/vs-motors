@@ -92,7 +92,11 @@ const CreateVehicle = (props) => {
               >
                 {years ? (
                   years.map((e) => {
-                    return <MenuItem value={e}>{e}</MenuItem>;
+                    return (
+                      <MenuItem key={e} value={e}>
+                        {e}
+                      </MenuItem>
+                    );
                   })
                 ) : (
                   <div>Loading...</div>
@@ -113,7 +117,11 @@ const CreateVehicle = (props) => {
               >
                 {owners ? (
                   owners.map((e) => {
-                    return <MenuItem value={e.id}>{e.c_name}</MenuItem>;
+                    return (
+                      <MenuItem key={e.id} value={e.id}>
+                        {e.c_name}
+                      </MenuItem>
+                    );
                   })
                 ) : (
                   <div>Loading...</div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBTable,
@@ -13,7 +13,18 @@ export default function GetOrderList(props) {
   const [modal, setModal] = useState(false);
   const [parts, setParts] = useState([]);
   const [orderID, setOrderID] = useState("");
-
+  const [orders, setOrders] = useState([]);
+  const update = props.update;
+  useEffect(() => {
+    // GET ORDER LIST
+    async function getOrdersList() {
+      const res = await axios.get("https://vs-motors.herokuapp.com/orders");
+      let data = res.data.orders;
+      console.log(data);
+      setOrders(data);
+    }
+    getOrdersList();
+  }, [parts, update]);
   function toggleModal() {
     setModal(!modal);
   }
@@ -23,14 +34,10 @@ export default function GetOrderList(props) {
       `https://vs-motors.herokuapp.com/parts/order/${id}`
     );
     let data = res.data.parts;
-    console.log(data);
     setParts(data);
   }
   async function deleteOrderById(id) {
-    let res = await axios.delete(
-      `https://vs-motors.herokuapp.com/orders/${id}`
-    );
-    console.log(res);
+    await axios.delete(`https://vs-motors.herokuapp.com/orders/${id}`);
     props.toggleUpdate();
   }
   function handleModal(e) {
@@ -62,7 +69,7 @@ export default function GetOrderList(props) {
     });
   }
 
-  if (props.orders) {
+  if (orders) {
     return (
       <MDBContainer className="mt-5">
         <MDBTable hover responsive>
@@ -77,7 +84,7 @@ export default function GetOrderList(props) {
             </tr>
           </MDBTableHead>
           <MDBTableBody>
-            {props.orders.map((e) => {
+            {orders.map((e) => {
               return (
                 <tr key={e.orderID + "-" + e.customerID} id={e.orderID}>
                   <td>{e.orderID}</td>
@@ -115,7 +122,6 @@ export default function GetOrderList(props) {
           orderId={orderID}
           parts={parts}
           partsList={getPartsList}
-          refresh={props.refresh}
         />
       </MDBContainer>
     );

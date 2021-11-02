@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { MDBTable, MDBTableBody, MDBTableHead, MDBIcon } from "mdbreact";
+import {
+  MDBTable,
+  MDBTableBody,
+  MDBTableHead,
+  MDBIcon,
+  MDBContainer,
+} from "mdbreact";
 import axios from "axios";
 import ServiceModal from "./ServiceModal";
 import InvoiceModal from "./InvoiceModal";
@@ -57,64 +63,66 @@ const ServiceList = ({ didrefresh }) => {
   }
 
   return (
-    <MDBTable hover responsive>
-      <MDBTableHead>
-        <tr>
-          <th>#</th>
-          <th>Date</th>
-          <th>Customer</th>
-          <th>Vehicle</th>
-          <th>Description</th>
-          <th>Parts</th>
-          <th>Work</th>
-          <th>Total</th>
-          <th>Serviced by</th>
-          <th>Paid</th>
-          <th></th>
-        </tr>
-      </MDBTableHead>
-      <MDBTableBody>
-        {serviceList ? (
-          serviceList.map((e) => {
-            return (
-              <tr key={e.id}>
-                <td>{count++}</td>
-                <td>{e.created_at}</td>
-                <td>{e.c_name}</td>
-                <td>
-                  {e.model} {e.model} {e.reg_num}
-                </td>
-                <td>{e.description}</td>
-                <td>£{e.total_vat}</td>
-                <td>£{e.work}</td>
-                <td>£{sum(e.total_vat, e.work)}</td>
-                <td>{e.w_name}</td>
-                <td id={e.id} onClick={handleServiceId}>
-                  {e.paid_status ? (
-                    <MDBIcon icon="check" className="green-text" />
-                  ) : (
-                    <MDBIcon icon="times" className="red-text" />
-                  )}
-                </td>
-                <td>
-                  {e.paid_status ? (
-                    <MDBIcon
-                      far
-                      icon="file-alt"
-                      data-id={e.id}
-                      onClick={handleInvoiceModalId}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </td>
-              </tr>
-            );
-          })
-        ) : (
-          <div>Loading...</div>
-        )}
-      </MDBTableBody>
+    <MDBContainer>
+      <MDBTable hover responsive>
+        <MDBTableHead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Description</th>
+            <th>Parts</th>
+            <th>Work</th>
+            <th>Total</th>
+            <th>Serviced by</th>
+            <th>Paid</th>
+            <th></th>
+          </tr>
+        </MDBTableHead>
+        <MDBTableBody>
+          {serviceList ? (
+            serviceList.map((e) => {
+              return (
+                <tr key={e.id}>
+                  <td>{count++}</td>
+                  <td>{e.created_at}</td>
+                  <td>{e.c_name}</td>
+                  <td>
+                    {e.model} {e.model} {e.reg_num}
+                  </td>
+                  <td>{e.description}</td>
+                  <td>£{e.total_vat}</td>
+                  <td>£{e.work}</td>
+                  <td>£{sum(e.total_vat, e.work)}</td>
+                  <td>{e.w_name}</td>
+                  <td id={e.id} onClick={handleServiceId}>
+                    {e.paid_status ? (
+                      <MDBIcon icon="check" className="green-text" />
+                    ) : (
+                      <MDBIcon icon="times" className="red-text" />
+                    )}
+                  </td>
+                  <td>
+                    {e.paid_status ? (
+                      <MDBIcon
+                        far
+                        icon="file-alt"
+                        data-id={e.id}
+                        onClick={handleInvoiceModalId}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <div>Loading...</div>
+          )}
+        </MDBTableBody>
+      </MDBTable>
       <ServiceModal
         isModal={isModal}
         toggle={toggle}
@@ -129,7 +137,7 @@ const ServiceList = ({ didrefresh }) => {
       ) : (
         ""
       )}
-    </MDBTable>
+    </MDBContainer>
   );
 };
 

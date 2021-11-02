@@ -23,14 +23,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const PartModal = ({
-  modal,
-  toggleModal,
-  orderId,
-  parts,
-  partsList,
-  refresh,
-}) => {
+const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
   let count = 1;
   const [part, setPart] = useState({
     supplierId: 0,
@@ -49,10 +42,9 @@ const PartModal = ({
       const data = res.data.response;
       setSuppliers(data);
       setPart((prev) => ({ ...prev, orderId: orderId }));
-      refresh();
     }
     getSuppliersList();
-  }, [modal, orderId, refresh]);
+  }, [modal, orderId]);
 
   // HANDLER PART STATE
   function handleChangeSupplier(e) {

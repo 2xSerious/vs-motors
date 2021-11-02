@@ -23,7 +23,7 @@ export default function GetClientList(props) {
     console.log("call");
   }
 
-  if (props.customers) {
+  if (props.customers.length > 0) {
     let counter = 0;
     return (
       <MDBContainer className="mt-5">

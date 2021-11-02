@@ -18,7 +18,6 @@ function Vehicles() {
       const res = await axios.get("https://vs-motors.herokuapp.com/vehicles/");
       let data = res.data.response;
       setVehicles(data);
-      console.log(data);
     }
     getVehicles();
     setSubmit(false);
