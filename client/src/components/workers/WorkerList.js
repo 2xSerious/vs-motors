@@ -1,4 +1,5 @@
 import axios from "axios";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBTable,
@@ -9,15 +10,17 @@ import {
 import { confirmAlert } from "react-confirm-alert";
 
 export default function GetWorkerList(props) {
+  const url = host.url;
+
   async function deleteWorker(id) {
-    await axios.delete(`https://vs-motors.herokuapp.com/workers/${id}`);
+    await axios.delete(`${url}/workers/worker/${id}`);
     props.handleSubmit();
   }
 
   function handleDelete(id) {
     confirmAlert({
       title: "Delete",
-      message: "Delete worker record?",
+      message: "Delete this record?",
       buttons: [
         {
           label: "Yes",

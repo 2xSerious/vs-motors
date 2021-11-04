@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBBtn,
@@ -30,13 +31,12 @@ export default function UpdateVehicle(props) {
   });
 
   const id = props.forId;
+  const url = host.url;
 
   // UPDATE ON id
   useEffect(() => {
     async function getVehiclebyId() {
-      const res = await axios.get(
-        `https://vs-motors.herokuapp.com/vehicles/${id}`
-      );
+      const res = await axios.get(`${url}/vehicles/${id}`);
       let data = res.data.response;
       console.log(data);
       if (data.length > 0) {
@@ -52,25 +52,22 @@ export default function UpdateVehicle(props) {
       }
     }
     getVehiclebyId();
-  }, [id]);
+  }, [url, id]);
 
   // HANDLE UPDATE
   async function updateVehicleDetails() {
-    let res = await axios.put(
-      `https://vs-motors.herokuapp.com/vehicles/${id}`,
-      {
-        make: vehicle.make,
-        model: vehicle.model,
-        year: vehicle.year,
-        reg: vehicle.reg,
-        owner: vehicle.ownerId,
-      }
-    );
+    await axios.put(`${url}/vehicles/${id}`, {
+      make: vehicle.make,
+      model: vehicle.model,
+      year: vehicle.year,
+      reg: vehicle.reg,
+      owner: vehicle.ownerId,
+    });
   }
   // HANDLE DELTE
   async function deleteVehicle() {
     console.log(id);
-    await axios.delete(`https://vs-motors.herokuapp.com/vehicles/${id}`);
+    await axios.delete(`${url}/vehicles/${id}`);
     props.handleSubmit();
   }
 

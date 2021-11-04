@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import { host } from "../host";
 import { MDBBtn, MDBContainer, MDBIcon } from "mdbreact";
 
 import CreateOrder from "./OrdersForm";
@@ -17,11 +17,24 @@ function Orders() {
   const [modal, setModal] = useState(false);
 
   const [updateList, setUpdateList] = useState(false);
+  const url = host.url;
 
   useEffect(() => {
+    async function getCustomers() {
+      const res = await axios.get(`${url}/clients`);
+      const data = res.data.response;
+
+      setCustomers(data);
+    }
+    async function getSuppliers() {
+      const res = await axios.get(`${url}/suppliers`);
+      const data = res.data.response;
+      setSuppliers(data);
+    }
+
     getCustomers();
     getSuppliers();
-  }, [updateList]);
+  }, [url, updateList]);
 
   function toggleUpdateList() {
     setCustomerId("");
@@ -29,20 +42,6 @@ function Orders() {
     setUpdateList(!updateList);
   }
 
-  // GET CUSTOMER LIST
-  async function getCustomers() {
-    const res = await axios.get("https://vs-motors.herokuapp.com/clients");
-    const data = res.data.response;
-
-    setCustomers(data);
-  }
-
-  // GET SUPPLIER LIST
-  async function getSuppliers() {
-    const res = await axios.get("https://vs-motors.herokuapp.com/suppliers");
-    const data = res.data.response;
-    setSuppliers(data);
-  }
   function toggle() {
     setModal(!modal);
   }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBTable,
@@ -9,15 +10,16 @@ import {
 import { confirmAlert } from "react-confirm-alert";
 
 export default function GetSupplierList(props) {
+  const url = host.url;
   async function deleteSupplier(id) {
-    await axios.delete(`https://vs-motors.herokuapp.com/suppliers/${id}`);
+    await axios.delete(`${url}}/suppliers/${id}`);
     props.handleSubmit();
   }
 
   function handleDelete(id) {
     confirmAlert({
       title: "Delete",
-      message: "Delete supplier record?",
+      message: "Delete this record?",
       buttons: [
         {
           label: "Yes",

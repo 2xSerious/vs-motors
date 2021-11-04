@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBBtn,
@@ -22,16 +23,14 @@ export default function UpdateCustomer(props) {
     postcode: true,
     country: true,
   });
-
+  const url = host.url;
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,})+$/;
   const phoneRegex = /^[0-9]*$/;
 
   // UPDATE ON id
   useEffect(() => {
     async function getCustomerbyId() {
-      const res = await axios.get(
-        `https://vs-motors.herokuapp.com/clients/${props.forId}`
-      );
+      const res = await axios.get(`${url}/clients/${props.forId}`);
       let data = res.data.response;
       console.log(res);
       if (data.length > 0) {
@@ -51,24 +50,21 @@ export default function UpdateCustomer(props) {
 
   // HANDLE UPDATE
   async function updateCustomerDetails() {
-    let res = await axios.put(
-      `https://vs-motors.herokuapp.com/clients/${props.forId}`,
-      {
-        cName: customer.name,
-        phone: customer.phone,
-        email: customer.email,
-        address: customer.address,
-        city: customer.city,
-        postcode: customer.postcode,
-        country: customer.country,
-      }
-    );
+    let res = await axios.put(`${url}/clients/${props.forId}`, {
+      cName: customer.name,
+      phone: customer.phone,
+      email: customer.email,
+      address: customer.address,
+      city: customer.city,
+      postcode: customer.postcode,
+      country: customer.country,
+    });
     console.log(res);
   }
   // HANDLE DELTE
   async function deleteCustomer() {
     await axios
-      .delete(`https://vs-motors.herokuapp.com/clients/${props.forId}`)
+      .delete(`${url}/clients/${props.forId}`)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
       .then(() => {

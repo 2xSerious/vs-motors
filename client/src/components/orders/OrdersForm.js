@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBRow,
@@ -31,33 +32,27 @@ const CreateOrder = (props) => {
 
   const [parts, setParts] = useState([]);
   const status = "open";
+  const url = host.url;
+  let id = props.customerId;
 
   useEffect(() => {
-    const handleVehicle = () => {
-      console.log(props.customerId);
-      if (props.customerId) {
-        getVehicles(props.customerId);
+    if (id) {
+      async function getVehicles() {
+        const res = await axios.get(`${url}/vehicles/customer/${id}`);
+        const data = res.data.response;
+        console.log(data);
+        setVehicles(data);
       }
-    };
-    handleVehicle();
-  }, [props.customerId]);
+      getVehicles();
+    }
+  }, [url, id]);
 
   // GET VEHICLES BY CUSTOMER ID
-  async function getVehicles(id) {
-    const res = await axios.get(
-      `https://vs-motors.herokuapp.com/vehicles/customer/${id}`
-    );
-    const data = res.data.response;
-    console.log(data);
-    setVehicles(data);
-  }
 
   function addToPartList() {
     if (!part.partName || !part.partValue) {
       return;
     }
-    console.log(part.partName);
-    console.log(part.partValue);
 
     setParts((prev) => [...prev, part]);
     setPart((prev) => ({ ...prev, partName: "", quantity: 1, partValue: "" }));
@@ -102,7 +97,6 @@ const CreateOrder = (props) => {
     let dd = d.getDate();
 
     let createdAt = `${yyyy}-${mm}-${dd}`;
-    console.log(createdAt);
     return createdAt;
   }
   //HANDLE SUBMIT
@@ -115,16 +109,13 @@ const CreateOrder = (props) => {
   async function postOrder() {
     let d = createdAtDate();
     try {
-      let res = await axios.post("https://vs-motors.herokuapp.com/orders", {
+      let res = await axios.post(`${url}/orders`, {
         date: d,
         vehicleId: props.vehicleId,
         status: status,
       });
-      console.log(res);
       if (res.statusText === "Created") {
-        let response = await axios.get(
-          "https://vs-motors.herokuapp.com/orders"
-        );
+        let response = await axios.get(`${url}/orders`);
         let orders = response.data.orders;
         let orderId = orders[orders.length - 1];
         let lastId = orderId.orderID;
@@ -152,10 +143,7 @@ const CreateOrder = (props) => {
       parts.forEach((element) => {
         payload.parts.push(element);
       });
-      let res = await axios.post(
-        "https://vs-motors.herokuapp.com/parts",
-        payload
-      );
+      let res = await axios.post(`${url}/parts`, payload);
       if (res.status === 200) {
         setPart({
           partName: "",
@@ -167,7 +155,6 @@ const CreateOrder = (props) => {
         setParts([]); // IF PARTS ADDED, RESET
         props.toggleUpdate();
       }
-      console.log(res);
     } catch (error) {
       console.log(error);
     }

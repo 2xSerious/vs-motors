@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-
+import NumberFormat from "react-number-format";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBModal,
@@ -21,6 +22,7 @@ import {
 import axios from "axios";
 
 function CreateService({ toggle, isModal, refresh }) {
+  const url = host.url;
   const [orders, setOrders] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [orderID, setOrderID] = useState("");
@@ -33,23 +35,19 @@ function CreateService({ toggle, isModal, refresh }) {
   });
 
   useEffect(() => {
+    async function getOrders() {
+      let res = await axios.get(`${url}/orders`);
+      let data = res.data.orders;
+      setOrders(data);
+    }
+    async function getWorkers() {
+      let res = await axios.get(`${url}/workers`);
+      let data = res.data.response;
+      setWorkers(data);
+    }
     getOrders();
     getWorkers();
-  }, []);
-
-  // Get order list
-  async function getOrders() {
-    let res = await axios.get("https://vs-motors.herokuapp.com/orders");
-    let data = res.data.orders;
-    setOrders(data);
-  }
-
-  // Get worker list
-  async function getWorkers() {
-    let res = await axios.get("https://vs-motors.herokuapp.com/workers");
-    let data = res.data.response;
-    setWorkers(data);
-  }
+  }, [url]);
 
   // HANDLE ORDERS SELECT
 
@@ -65,14 +63,13 @@ function CreateService({ toggle, isModal, refresh }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    postService();
+    postService().then(refresh());
     clearForm();
-    refresh();
   }
 
   // Prepare post
   async function postService() {
-    let post = await axios.post("https://vs-motors.herokuapp.com/services", {
+    let post = await axios.post(`${url}/services`, {
       date: new Date(),
       orderId: orderID,
       odometer: service.odometer,
@@ -151,7 +148,10 @@ function CreateService({ toggle, isModal, refresh }) {
             <hr />
             <FormControl variant="standard" sx={{ m: 1, minWidth: 20 }}>
               <InputLabel htmlFor="odometer">Odometer</InputLabel>
-              <Input
+              <NumberFormat
+                customInput={Input}
+                thousandsGroupStyle="thousand"
+                thousandSeparator={true}
                 id="odometer"
                 label="Odometer"
                 variant="standard"

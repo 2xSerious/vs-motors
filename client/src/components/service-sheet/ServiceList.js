@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { host } from "../host";
 import {
   MDBTable,
   MDBTableBody,
@@ -15,22 +16,33 @@ const ServiceList = ({ didrefresh }) => {
   const [currentService, setCurrentService] = useState("");
   const [isModal, setIsModal] = useState(false);
 
+  const [parts, setParts] = useState([]);
+  const url = host.url;
   const [invoiceModal, setInvoiceModal] = useState(false);
 
   let count = 1;
 
   useEffect(() => {
+    async function getServiceList() {
+      let res = await axios.get(`${url}/services`);
+      let data = res.data.response;
+      setServiceList(data);
+      console.log(data);
+    }
     getServiceList();
-  }, [isModal, didrefresh]);
+  }, [url, isModal, didrefresh]);
 
-  async function getServiceList() {
-    let res = await axios.get("https://vs-motors.herokuapp.com/services");
-    let data = res.data.response;
-    setServiceList(data);
+  async function getPartsByOrderId(id) {
+    let res = await axios.get(`${url}/parts/order/${id}`);
+    let data = res.data.parts;
+    console.log(data);
+    setParts(data);
   }
+
   // Helper sum function
   function sum(parts, work) {
-    return parseInt(parts) + parseInt(work);
+    let total = parseInt(parts) + parseInt(work);
+    return total.toFixed(2);
   }
 
   // Service Modal toggle
@@ -57,9 +69,11 @@ const ServiceList = ({ didrefresh }) => {
   }
 
   function findIndex(id) {
-    let fid = parseInt(id);
+    const fid = parseInt(id);
     const index = serviceList.findIndex((e) => e.id === fid);
-    setCurrentService(serviceList[index]);
+    const curobj = serviceList[index];
+    setCurrentService(curobj);
+    getPartsByOrderId(curobj.orderID);
   }
 
   return (
@@ -127,12 +141,14 @@ const ServiceList = ({ didrefresh }) => {
         isModal={isModal}
         toggle={toggle}
         service={currentService}
+        parts={parts}
       />
       {currentService ? (
         <InvoiceModal
           isModal={invoiceModal}
           toggle={toggleInvoiceModal}
-          service={currentService}
+          serviceid={currentService.id}
+          paidstatus={currentService.paid_status}
         />
       ) : (
         ""

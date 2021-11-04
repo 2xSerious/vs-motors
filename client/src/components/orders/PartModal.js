@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBBtn,
@@ -35,10 +36,10 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
   });
 
   const [suppliers, setSuppliers] = useState();
-
+  const url = host.url;
   useEffect(() => {
     async function getSuppliersList() {
-      const res = await axios.get("https://vs-motors.herokuapp.com/suppliers");
+      const res = await axios.get(`${url}/suppliers`);
       const data = res.data.response;
       setSuppliers(data);
       setPart((prev) => ({ ...prev, orderId: orderId }));
@@ -71,7 +72,7 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
     addPart();
   }
   async function addPart() {
-    let res = await axios.post("https://vs-motors.herokuapp.com/parts/add", {
+    let res = await axios.post(`${url}/parts/add`, {
       name: part.name,
       quantity: part.quantity,
       value: part.value,
@@ -98,7 +99,7 @@ const PartModal = ({ modal, toggleModal, orderId, parts, partsList }) => {
   }
 
   async function deletePart(id) {
-    let res = await axios.delete(`https://vs-motors.herokuapp.com/parts/${id}`);
+    let res = await axios.delete(`${url}/parts/${id}`);
     if (res.status === 200) {
       partsList(part.orderId);
     }

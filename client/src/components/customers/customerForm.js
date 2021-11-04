@@ -1,5 +1,7 @@
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBInput } from "mdbreact";
 
+import NumberFormat from "react-number-format";
+
 const CreateClient = (props) => {
   return (
     <MDBContainer>
@@ -21,20 +23,20 @@ const CreateClient = (props) => {
             </MDBInput>
           </MDBCol>
           <MDBCol md="4">
-            <MDBInput
+            <NumberFormat
+              customInput={MDBInput}
               className="form-control"
               value={props.phone}
               name="phone"
               onChange={props.onPhoneChange}
               type="text"
-              pattern="[0-9]*"
-              maxLength="10"
+              format="##### ######"
               id="formBasicPhone"
               label="Phone number"
             >
               <div className="valid-feedback">Looks Good!</div>
               <div className="invalid-feedback">Use numbers only!</div>
-            </MDBInput>
+            </NumberFormat>
           </MDBCol>
           <MDBCol md="4">
             <MDBInput
@@ -56,7 +58,7 @@ const CreateClient = (props) => {
               value={props.address}
               name="address"
               onChange={props.onAddressChange}
-              type="address"
+              type="text"
               label="Adress"
             >
               <div className="valid-feedback">Looks Good!</div>

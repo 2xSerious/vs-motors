@@ -3,6 +3,7 @@ import axios from "axios";
 import { MDBContainer, MDBIcon } from "mdbreact";
 import CreateVehicle from "./VehicleForm";
 import GetVehicleList from "./VehicleList";
+import { host } from "../host";
 
 function Vehicles() {
   const [vehicles, setVehicles] = useState([]);
@@ -12,10 +13,10 @@ function Vehicles() {
   const [reg, setReg] = useState("");
   const [owner, setOwner] = useState("");
   const [submit, setSubmit] = useState(false);
-
+  const url = host.url;
   useEffect(() => {
     async function getVehicles() {
-      const res = await axios.get("https://vs-motors.herokuapp.com/vehicles/");
+      const res = await axios.get(`${url}/vehicles/`);
       let data = res.data.response;
       setVehicles(data);
     }
@@ -63,7 +64,7 @@ function Vehicles() {
 
   async function insertVehicle() {
     try {
-      await axios.post("https://vs-motors.herokuapp.com/vehicles/", {
+      await axios.post(`${url}/vehicles/`, {
         make: make,
         model: model,
         year: year,

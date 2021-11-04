@@ -3,6 +3,7 @@ import axios from "axios";
 import CreateClient from "./customerForm";
 import GetClientList from "./customerList";
 import { MDBContainer, MDBIcon } from "mdbreact";
+import { host } from "../host";
 
 function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -14,36 +15,30 @@ function Customers() {
   const [postcode, setPostcode] = useState("");
   const [country, setCountry] = useState("");
   const [submit, setSubmit] = useState(false);
-  const [validation, setValidation] = useState(true);
 
+  const url = host.url;
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,})+$/;
-  const phoneRegex = /^[0-9]*$/;
-  useEffect(() => {
-    getCustomers();
-  }, [submit]);
 
-  async function getCustomers() {
-    const res = await axios.get("https://vs-motors.herokuapp.com/clients");
-    let data = res.data.response;
-    if (data.length > 0) {
-      setCustomers(data);
-    } else {
-      setCustomers([]);
+  useEffect(() => {
+    async function getCustomers() {
+      const res = await axios.get(`${url}/clients`);
+      let data = res.data.response;
+      if (data.length > 0) {
+        setCustomers(data);
+      } else {
+        setCustomers([]);
+      }
     }
-  }
+    getCustomers();
+  }, [url, submit]);
+
   // HANDLE INPUTS
   const handleChangeName = (e) => {
     setName(e.target.value);
   };
   const handleChangePhone = (e) => {
     let phone = e.target.value;
-    if (phoneRegex.test(phone)) {
-      setPhone(phone);
-      setValidation(true);
-    } else {
-      setPhone(phone);
-      setValidation(false);
-    }
+    setPhone(phone);
   };
   const handleChangeEmail = (e) => {
     let email = e.target.value;
@@ -98,24 +93,21 @@ function Customers() {
       return;
     }
 
-    if (!validation) {
+    if (!phone) {
       e.target.className += " was-validated";
       return;
     }
-    insertClient(); // create user API
+    insertClient().then(toggleSubmit);
     clearFields(); // Clear input fields
-
-    toggleSubmit(); // Update list After Submit
   };
 
   function toggleSubmit() {
     setSubmit(!submit);
-    console.log(submit);
   }
 
   async function insertClient() {
     try {
-      await axios.post("http://localhost:3001/clients/", {
+      await axios.post(`${url}/clients`, {
         cName: name,
         phone: phone,
         email: email,

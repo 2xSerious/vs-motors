@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBInput } from "mdbreact";
+import { host } from "../host";
 
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -10,29 +11,32 @@ import axios from "axios";
 const CreateVehicle = (props) => {
   const [years, setYears] = useState([]);
   const [owners, setOwners] = useState([]);
+  const url = host.url;
 
   useEffect(() => {
+    async function getOwners() {
+      const res = await axios.get(`${url}/clients`);
+      let data = res.data.response;
+      data.sort((a, b) => a.c_name > b.c_name);
+      setOwners(data);
+    }
     getOwners();
+  }, [url]);
+
+  useEffect(() => {
+    function generateYears() {
+      let date = new Date();
+      var year = date.getFullYear();
+      const array = [];
+      for (let i = 1; i < 21; i++) {
+        array.push(year - i);
+      }
+      array.reverse();
+      setYears(array);
+    }
     generateYears();
   }, []);
 
-  function generateYears() {
-    let date = new Date();
-    var year = date.getFullYear();
-    const array = [];
-    for (let i = 1; i < 21; i++) {
-      array.push(year - i);
-    }
-    array.reverse();
-    setYears(array);
-  }
-
-  async function getOwners() {
-    const res = await axios.get("https://vs-motors.herokuapp.com/clients");
-    let data = res.data.response;
-    data.sort((a, b) => a.c_name > b.c_name);
-    setOwners(data);
-  }
   return (
     <MDBContainer>
       <form className="needs-validation" onSubmit={props.onSubmit} noValidate>

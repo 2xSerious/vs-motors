@@ -1,36 +1,45 @@
-import { useState, useEffect } from "react";
-import InvoiceViewer from "../invoice/Viewer";
-import { MDBContainer, MDBModal, MDBModalBody, MDBModalHeader } from "mdbreact";
+import { host } from "../host";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBModal,
+  MDBModalBody,
+  MDBModalHeader,
+} from "mdbreact";
+import { saveAs } from "file-saver";
 import axios from "axios";
-const InvoiceModal = ({ toggle, isModal, service }) => {
-  const [parts, setParts] = useState([]);
+import { useEffect, useState } from "react";
 
+const InvoiceModal = ({ toggle, isModal, serviceid, paidstatus }) => {
+  const [invoiceNo, setInvoiceNo] = useState("");
+  const url = host.url;
   useEffect(() => {
-    async function getPartsByOrderId(id) {
-      let res = await axios.get(
-        `https://vs-motors.herokuapp.com/parts/order/${id}`
-      );
-      let data = res.data.parts;
-      console.log(data);
-      setParts(data);
+    if (paidstatus > 0) {
+      async function getInvoiceNo() {
+        const { data } = await axios.get(
+          `${url}/services/service/${serviceid}`
+        );
+        console.log(data);
+        console.log(data.response[0]);
+        setInvoiceNo(data.response[0].inv_no);
+      }
+      getInvoiceNo();
     }
-    if (service) {
-      getPartsByOrderId(service.orderID);
-    }
-  }, [service]);
+  }, [url, serviceid, paidstatus, invoiceNo, toggle]);
 
-  console.log(service);
-  console.log(parts);
+  async function getPdf() {
+    const { data } = await axios.get(`${url}/invoices/${invoiceNo}`, {
+      responseType: "arraybuffer",
+    });
+    const blob = new Blob([data], { type: "application/pdf" });
+    saveAs(blob, `${invoiceNo}.pdf`);
+  }
   return (
     <MDBContainer>
       <MDBModal isOpen={isModal} toggle={toggle}>
-        <MDBModalHeader toggle={toggle}>Service # {service.id}</MDBModalHeader>
+        <MDBModalHeader toggle={toggle}>Service # {}</MDBModalHeader>
         <MDBModalBody>
-          {parts.length > 0 ? (
-            <InvoiceViewer invoice={service} parts={parts} />
-          ) : (
-            ""
-          )}
+          <MDBBtn onClick={getPdf}>Download</MDBBtn>
         </MDBModalBody>
       </MDBModal>
     </MDBContainer>

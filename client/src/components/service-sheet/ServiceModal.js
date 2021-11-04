@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBBtn,
@@ -23,43 +24,77 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const ServiceModal = ({ toggle, isModal, service }) => {
+const ServiceModal = ({ toggle, isModal, service, parts }) => {
+  const url = host.url;
   const totalparts = parseFloat(service.total_vat).toFixed(2);
   const totalwork = parseFloat(service.work).toFixed(2);
   const total = parseFloat(totalparts) + parseFloat(totalwork);
   const vat = parseFloat(total * 0.2).toFixed(2);
   const totalvat = parseFloat(total * 1.2).toFixed(2);
-
   const [paidStatus, setPaidStatus] = useState("0");
   const [paidType, setPaidType] = useState("");
   const [paidTypes, setPaidTypes] = useState([]);
   const [workUpdate, setWorkUpdate] = useState("");
+  const [details, setDetails] = useState({});
 
   useEffect(() => {
     setWorkUpdate(service.work);
+    async function getPaidTypes() {
+      let res = await axios.get(`${url}/services/types`);
+      let data = res.data.response;
+      setPaidTypes(data);
+    }
     getPaidTypes();
     console.log(service);
     if (service.paid_status === 1) {
       setPaidStatus("1");
+    } else {
+      setPaidStatus("0");
     }
     if (service.paid_id) {
       setPaidType(service.paid_id);
+    } else {
+      setPaidType("1");
     }
-  }, [toggle, service]);
+  }, [url, toggle, service]);
+
+  useEffect(() => {
+    function invoiceNoGenerator() {
+      const date = new Date();
+      const d = date.getDate();
+      const mm = date.getMonth();
+      const yy = date.getFullYear();
+      const random = Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
+      const invNo = `${yy}${mm}${d}${random}`;
+
+      setDetails({
+        inv_no: invNo,
+        total: totalvat,
+        service_id: service.id,
+        date: date,
+      });
+    }
+    invoiceNoGenerator();
+  }, [service.id, totalvat]);
 
   async function update() {
-    let res = await axios.put("https://vs-motors.herokuapp.com/services", {
+    await axios.put(`${url}/services`, {
       id: service.id,
       work: workUpdate,
       paidStatus: paidStatus,
       paidId: paidType,
     });
-    console.log(res);
+
+    postInvoiceInfo();
   }
-  async function getPaidTypes() {
-    let res = await axios.get("https://vs-motors.herokuapp.com/services/types");
-    let data = res.data.response;
-    setPaidTypes(data);
+
+  async function postInvoiceInfo() {
+    console.log(details);
+    await axios.post(`${url}/invoices`, {
+      invoice: service,
+      parts: parts,
+      details: details,
+    });
   }
   function handleSubmit(e) {
     e.preventDefault();
@@ -150,7 +185,7 @@ const ServiceModal = ({ toggle, isModal, service }) => {
                 </FormControl>
                 <hr />
                 <>
-                  <h4>Invoice Summerry</h4>
+                  <h4>Invoice Summary</h4>
                 </>
                 <MDBContainer>
                   <MDBCard>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { host } from "../host";
 import {
   MDBContainer,
   MDBTable,
@@ -15,29 +16,29 @@ export default function GetOrderList(props) {
   const [orderID, setOrderID] = useState("");
   const [orders, setOrders] = useState([]);
   const update = props.update;
+  const url = host.url;
+
   useEffect(() => {
     // GET ORDER LIST
     async function getOrdersList() {
-      const res = await axios.get("https://vs-motors.herokuapp.com/orders");
+      const res = await axios.get(`${url}/orders`);
       let data = res.data.orders;
       console.log(data);
       setOrders(data);
     }
     getOrdersList();
-  }, [parts, update]);
+  }, [url, parts, update]);
   function toggleModal() {
     setModal(!modal);
   }
 
   async function getPartsList(id) {
-    let res = await axios.get(
-      `https://vs-motors.herokuapp.com/parts/order/${id}`
-    );
+    let res = await axios.get(`${url}/parts/order/${id}`);
     let data = res.data.parts;
     setParts(data);
   }
   async function deleteOrderById(id) {
-    await axios.delete(`https://vs-motors.herokuapp.com/orders/${id}`);
+    await axios.delete(`${url}/orders/${id}`);
     props.toggleUpdate();
   }
   function handleModal(e) {

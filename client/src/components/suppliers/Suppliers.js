@@ -1,25 +1,23 @@
 import { useEffect, useState } from "react";
+import { host } from "../host";
 import axios from "axios";
 import CreateSupplier from "./supplierForm";
 import GetSupplierList from "./supplierList";
-
 import { MDBContainer, MDBIcon } from "mdbreact";
 
 function Suppliers() {
   const [suppliers, setSuppliers] = useState([]);
   const [name, setName] = useState("");
   const [submit, setSubmit] = useState(false);
-
+  const url = host.url;
   useEffect(() => {
     async function getSuppliers() {
-      const res = await axios.get("https://vs-motors.herokuapp.com/suppliers/");
+      const res = await axios.get(`${url}/suppliers/`);
       let data = res.data.response;
       setSuppliers(data);
-      console.log(data);
     }
     getSuppliers();
-    setSubmit(false);
-  }, [submit]);
+  }, [url, submit]);
 
   // HANDLE INPUTS
   const handleChangeName = (e) => {
@@ -45,7 +43,7 @@ function Suppliers() {
 
   async function insertSupplier() {
     try {
-      await axios.post("https://vs-motors.herokuapp.com/suppliers/", {
+      await axios.post(`${url}/suppliers/`, {
         sName: name,
       });
     } catch (error) {
