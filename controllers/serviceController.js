@@ -2,7 +2,8 @@ const Service = require("../models/Service");
 
 exports.createService = async (req, res, next) => {
   try {
-    const { date, orderId, odometer, description, work, workerId } = req.body;
+    const { date, orderId, odometer, description, work, workerId, paidStatus } =
+      req.body;
     const service = new Service({
       date,
       orderId,
@@ -10,6 +11,7 @@ exports.createService = async (req, res, next) => {
       description,
       work,
       workerId,
+      paidStatus,
     });
     await service.add();
     res.status(200).json({ service });

@@ -58,14 +58,15 @@ class Service {
   }
   add() {
     let sql = `INSERT INTO service_book
-                   (created_at, order_id, odometer, description, work, worker_id)
+                   (created_at, order_id, odometer, description, work, worker_id, paid_status)
                    VALUES (
-                       '${this.date}',
-                       '${this.orderId}',
+                        '${this.date}',
+                        '${this.orderId}',
                         '${this.odometer}',
                         '${this.description}',
                         '${this.work}',
-                        '${this.workerId}'
+                        '${this.workerId}',
+                        '${this.paidStatus}'
                    )
                    `;
     return db.execute(sql);
