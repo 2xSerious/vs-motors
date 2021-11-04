@@ -69,13 +69,20 @@ function CreateService({ toggle, isModal, refresh }) {
 
   // Prepare post
   async function postService() {
+    console.log(service);
+    const d = new Date();
+    const dd = d.getDate();
+    const mm = d.getMonth() + 1;
+    const yyyy = d.getFullYear();
+    const date = `${yyyy}-${mm}-${dd}`;
     let post = await axios.post(`${url}/services`, {
-      date: new Date(),
+      date: date,
       orderId: orderID,
       odometer: service.odometer,
       description: service.description,
       work: service.work,
       workerId: service.workerId,
+      paidStatus: 0,
     });
     console.log(post);
   }
