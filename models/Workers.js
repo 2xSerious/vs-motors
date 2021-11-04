@@ -12,6 +12,10 @@ class Workers {
     let sql = `SELECT * FROM workers WHERE id = '${id}'`;
     return db.execute(sql);
   }
+  static duplicate(name) {
+    const sql = `SELECT * FROM workers WHERE w_name = '${name}' `;
+    return db.execute(sql);
+  }
   static delete(id) {
     let sql = `
     DELETE FROM workers

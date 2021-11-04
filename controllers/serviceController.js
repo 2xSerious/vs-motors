@@ -55,3 +55,15 @@ exports.getPaidTypes = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getServiceById = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    console.log(id);
+    let [response, _] = await Service.getById(id);
+    res.status(200).json({ response });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};

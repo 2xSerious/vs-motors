@@ -40,7 +40,8 @@ class Service {
                       GROUP BY order_id ) p 
                       ON o.id = p.order_id 
                       LEFT JOIN workers w
-                      ON s.worker_id = w.id `;
+                      ON s.worker_id = w.id
+                       `;
     return db.execute(sql);
   }
 
@@ -71,6 +72,14 @@ class Service {
   }
   static getPaidTypes() {
     let sql = "SELECT * FROM paid_type";
+    return db.execute(sql);
+  }
+  static getById(id) {
+    const sql = `SELECT s.id as serviceId, i.id as invoiceId, i.inv_no, i.total as invoiceTotal
+                FROM service_book s
+                RIGHT JOIN invoices i
+                ON i.service_id = '${id}'`;
+
     return db.execute(sql);
   }
 }

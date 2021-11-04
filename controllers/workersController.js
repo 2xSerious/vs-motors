@@ -56,3 +56,14 @@ exports.deleteWorkerById = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.checkDuplicate = async (req, res, next) => {
+  try {
+    let { name } = req.params;
+    let [response, _] = await Worker.duplicate(name);
+    res.status(200).json({ response });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
