@@ -1,4 +1,4 @@
-const inv = require("../models/invoice-components");
+const inv = require("../models/invoice-components/Index");
 const pdf = require("html-pdf-node");
 const InvModel = require("../models/Invoice");
 
