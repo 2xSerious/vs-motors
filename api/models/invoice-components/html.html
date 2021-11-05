@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+ * HTML-Sheets-of-Paper (https://github.com/delight-im/HTML-Sheets-of-Paper)
+ * Copyright (c) delight.im (https://www.delight.im/)
+ * Licensed under the MIT License (https://opensource.org/licenses/MIT)
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Invoice No:</title>
+    <style>
+      .container {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .logo {
+        display: flex;
+        text-align: center;
+        margin-top: 3rem;
+      }
+      .title {
+        font-size: 2rem;
+        text-align: center;
+        margin-top: 3rem;
+      }
+      .info-container {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img
+          src="https://i.ibb.co/tJ1PmMH/logo2.png"
+          width="500"
+          height="auto"
+        />
+      </div>
+      <div class="title">
+        <h1 class="fs-1">INVOICE</h1>
+      </div>
+
+      <div class="info-container">
+        <div>
+          <div>Bill to: ${invoice.c_name}</div>
+          <div>${invoice.street_address}</div>
+          <div>${invoice.city} ${invoice.postcode}</div>
+        </div>
+        <div>
+          <div>Invoice No: 2232</div>
+          <div>Invoice Date: 13/02/2021</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
