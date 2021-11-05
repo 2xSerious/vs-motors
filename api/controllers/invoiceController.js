@@ -16,7 +16,7 @@ exports.saveInvoice = async (req, res, next) => {
 
     let options = {
       format: "A4",
-    };
+    }; //test
     const html = { content: inv(req.body) };
 
     pdf.generatePdf(html, options).then((pdfBuffer) => {
