@@ -22,7 +22,7 @@ exports.saveInvoice = async (req, res, next) => {
     pdf.generatePdf(html, options).then((pdfBuffer) => {
       data = pdfBuffer;
       const params = {
-        Bucket: "vs-motors",
+        Bucket: process.env.S3_BUCKET,
         Key: `${details.inv_no}.pdf`,
         Body: data,
       };
