@@ -9,7 +9,7 @@ exports.saveInvoice = async (req, res, next) => {
 
     let options = {
       format: "A4",
-      path: `./data/invoices/${details.inv_no}.pdf`,
+      path: `./public/invoices/${details.inv_no}.pdf`,
     };
     const html = { content: inv(req.body) };
 
@@ -34,7 +34,7 @@ exports.saveInvoice = async (req, res, next) => {
 exports.getPdf = async (req, res, next) => {
   try {
     let { id } = req.params;
-    res.download(`./data/invoices/${id}.pdf`);
+    res.download(`./public/invoices/${id}.pdf`);
   } catch (error) {
     console.log(error);
     next(error);
