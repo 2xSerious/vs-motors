@@ -6,7 +6,31 @@ import { MDBContainer, MDBIcon } from "mdbreact";
 import { host } from "../host";
 
 function Customers() {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState({
+    columns: [
+      {
+        label: "#",
+        field: "num",
+        sort: "asc",
+      },
+      {
+        label: "Name",
+        field: "name",
+        sort: "asc",
+      },
+      {
+        label: "Phone",
+        field: "phone",
+        sort: "asc",
+      },
+      {
+        label: "Email",
+        field: "email",
+        sort: "asc",
+      },
+    ],
+    rows: [],
+  });
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -24,14 +48,25 @@ function Customers() {
       const res = await axios.get(`${url}/clients`);
       let data = res.data.response;
       if (data.length > 0) {
-        setCustomers(data);
-      } else {
-        setCustomers([]);
+        let counter = 1;
+        let arr = data.reduce(
+          (acc, sub) => [
+            ...acc,
+            {
+              num: counter++,
+              name: sub.c_name,
+              phone: sub.phone,
+              email: sub.email,
+            },
+          ],
+          []
+        );
+        setCustomers((prev) => ({ ...prev, rows: arr }));
       }
     }
     getCustomers();
   }, [url, submit]);
-
+  console.log(customers);
   // HANDLE INPUTS
   const handleChangeName = (e) => {
     setName(e.target.value);

@@ -1,3 +1,3 @@
 export const host = {
-  url: "https://vs-motors.herokuapp.com",
+  url: "http://localhost:3001",
 };
