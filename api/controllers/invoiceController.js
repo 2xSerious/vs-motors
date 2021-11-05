@@ -8,8 +8,8 @@ exports.saveInvoice = async (req, res, next) => {
   var data;
   try {
     const s3 = new AWS.S3({
-      accessKeyId: process.env.ACCESS_ID,
-      secretAccessKey: process.env.SECRET_KEY,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     });
     console.log(req.body);
     const { invoice, parts, details } = req.body;
