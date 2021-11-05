@@ -1,4 +1,4 @@
-const moment = require("moment");
+// const moment = require("moment");
 
 module.exports = ({ invoice, parts, details }) => {
   let count = 1;
@@ -6,8 +6,8 @@ module.exports = ({ invoice, parts, details }) => {
   const total = parseFloat(invoice.total_vat) + parseFloat(work);
   const vat = parseFloat(total * 0.2).toFixed(2);
   const beforeVat = (total - vat).toFixed(2);
-  const d = details.date;
-  const date = moment(d).format("DD/MM/YYYY");
+  //   const d = details.date;
+  //   const date = moment(d).format("DD/MM/YYYY");
 
   const invoice_parts = parts.map((e) => {
     return `<tr>
@@ -48,7 +48,7 @@ module.exports = ({ invoice, parts, details }) => {
 				</div>
 				<div class="text-start">
 					<div>Invoice No: ${details.inv_no}</div>
-					<div>Invoice Date: ${date}</div>
+					<div>Invoice Date: ${details.date}</div>
 				</div>
 			</div>
 		  </div>
