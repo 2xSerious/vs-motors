@@ -28,12 +28,16 @@ const InvoiceModal = ({ toggle, isModal, serviceid, paidstatus }) => {
   }, [url, serviceid, paidstatus, invoiceNo, toggle]);
 
   async function getPdf() {
-    const { data } = await axios.get(`${url}/invoices/${invoiceNo}`, {
-      responseType: "arraybuffer",
-    });
+    const { data } = await axios.get(
+      `https://vs-motors.s3.amazonaws.com/${invoiceNo}.pdf`,
+      {
+        responseType: "arraybuffer",
+      }
+    );
     const blob = new Blob([data], { type: "application/pdf" });
     saveAs(blob, `${invoiceNo}.pdf`);
   }
+
   return (
     <MDBContainer>
       <MDBModal isOpen={isModal} toggle={toggle}>

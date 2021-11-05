@@ -66,12 +66,13 @@ const ServiceModal = ({ toggle, isModal, service, parts }) => {
       const yy = date.getFullYear();
       const random = Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
       const invNo = `${yy}${mm}${d}${random}`;
+      const formatedDate = `${yy}-${mm}-${d}`;
 
       setDetails({
         inv_no: invNo,
         total: totalvat,
         service_id: service.id,
-        date: date,
+        date: formatedDate,
       });
     }
     invoiceNoGenerator();
