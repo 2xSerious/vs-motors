@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { host } from "../host";
 import {
   MDBContainer,
@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { confirmAlert } from "react-confirm-alert";
 export default function UpdateCustomer(props) {
+  const updateModule = useRef(null);
   const [customer, setCustomer] = useState({});
   const [validation, setValidation] = useState({
     phone: true,
@@ -176,7 +177,7 @@ export default function UpdateCustomer(props) {
 
   return (
     <MDBContainer className="mt-5">
-      <MDBModal isOpen={props.modal} toggle={props.toggle}>
+      <MDBModal ref={updateModule} isOpen={props.modal} toggle={props.toggle}>
         <MDBModalHeader toggle={props.toggle}>Update Customer</MDBModalHeader>
         <MDBModalBody>
           <form

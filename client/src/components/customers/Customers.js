@@ -39,9 +39,20 @@ function Customers() {
   const [postcode, setPostcode] = useState("");
   const [country, setCountry] = useState("");
   const [submit, setSubmit] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [id, setId] = useState("");
 
   const url = host.url;
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,})+$/;
+
+  const handler = (id) => {
+    setId(id);
+    toggle();
+  };
+
+  const toggle = () => {
+    setModal(!modal);
+  };
 
   useEffect(() => {
     async function getCustomers() {
@@ -57,6 +68,7 @@ function Customers() {
               name: sub.c_name,
               phone: sub.phone,
               email: sub.email,
+              clickEvent: () => handler(sub.id),
             },
           ],
           []
@@ -191,7 +203,14 @@ function Customers() {
         postcode={postcode}
         country={country}
       />
-      <GetClientList handleSubmit={toggleSubmit} customers={customers} />,
+      <GetClientList
+        handleSubmit={toggleSubmit}
+        customers={customers}
+        id={id}
+        modal={modal}
+        toggle={toggle}
+      />
+      ,
     </MDBContainer>
   );
 }

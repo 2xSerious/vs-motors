@@ -15,30 +15,31 @@ import {
   Input,
   InputLabel,
   InputAdornment,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
+  Switch,
   Select,
+  TextField,
   MenuItem,
 } from "@mui/material";
 import axios from "axios";
 
+import { sumFloat, floatParser } from "../../js/helpers";
+
 const ServiceModal = ({ toggle, isModal, service, parts }) => {
   const url = host.url;
-  const totalparts = parseFloat(service.total_vat).toFixed(2);
-  const totalwork = parseFloat(service.work).toFixed(2);
-  const total = parseFloat(totalparts) + parseFloat(totalwork);
-  const vat = parseFloat(total * 0.2).toFixed(2);
-  const totalvat = parseFloat(total * 1.2).toFixed(2);
   const [paidStatus, setPaidStatus] = useState("0");
+  const [checked, setChecked] = useState(false);
+
   const [paidType, setPaidType] = useState("");
   const [paidTypes, setPaidTypes] = useState([]);
   const [workUpdate, setWorkUpdate] = useState("");
   const [details, setDetails] = useState({});
+  const totalparts = floatParser(service.total_vat).toFixed(2);
+  const totalvat = sumFloat(totalparts, workUpdate.work);
+  const total = floatParser(totalvat / 1.2).toFixed(2);
+  const vat = floatParser(total * 0.2).toFixed(2);
 
   useEffect(() => {
-    setWorkUpdate(service.work);
+    setWorkUpdate(service);
     async function getPaidTypes() {
       let res = await axios.get(`${url}/services/types`);
       let data = res.data.response;
@@ -48,8 +49,10 @@ const ServiceModal = ({ toggle, isModal, service, parts }) => {
     console.log(service);
     if (service.paid_status === 1) {
       setPaidStatus("1");
+      setChecked(true);
     } else {
       setPaidStatus("0");
+      setChecked(false);
     }
     if (service.paid_id) {
       setPaidType(service.paid_id);
@@ -79,24 +82,37 @@ const ServiceModal = ({ toggle, isModal, service, parts }) => {
   }, [service.id, totalvat]);
 
   async function update() {
-    await axios.put(`${url}/services`, {
+    let status = "closed";
+    let res = await axios.put(`${url}/services`, {
       id: service.id,
-      work: workUpdate,
-      paidStatus: paidStatus,
-      paidId: paidType,
+      work: workUpdate.work,
     });
-
-    postInvoiceInfo();
+    if (res.status === 200) {
+      postInvoiceInfo().then(
+        updateOrderStatus(service.orderID, { status: status })
+      );
+    }
   }
 
   async function postInvoiceInfo() {
-    console.log(details);
     await axios.post(`${url}/invoices`, {
-      invoice: service,
+      invoice: workUpdate,
       parts: parts,
       details: details,
     });
   }
+
+  async function updateOrderStatus(id, status) {
+    await axios.put(`${url}/orders/${id}`, status);
+  }
+
+  async function updatePaidStatus(id) {
+    await axios.put(`${url}/services/service/${id}`, {
+      paidId: paidType,
+      paidStatus: paidStatus,
+    });
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     update();
@@ -104,13 +120,19 @@ const ServiceModal = ({ toggle, isModal, service, parts }) => {
   }
 
   function handlePaidStatus(e) {
-    setPaidStatus(e.target.value);
+    setChecked(e.target.checked);
+
+    if (e.target.checked) {
+      setPaidStatus("1");
+    } else setPaidStatus("0");
   }
   function handleWorkUpdate(e) {
-    setWorkUpdate(e.target.value);
+    setWorkUpdate((prev) => ({ ...prev, work: e.target.value }));
   }
+
   function handlePaidType(e) {
     setPaidType(e.target.value);
+    updatePaidStatus(service.id);
   }
 
   return (
@@ -132,33 +154,31 @@ const ServiceModal = ({ toggle, isModal, service, parts }) => {
           </div>
           <form id="update-service" onSubmit={handleSubmit}>
             <div className="d-flex justify-content-between mx-3">
-              <FormControl variant="standard">
-                <InputLabel htmlFor="input-work">Work</InputLabel>
-                <Input
-                  id="input-work"
-                  label="Work"
-                  value={workUpdate}
-                  onChange={handleWorkUpdate}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <strong>£</strong>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Paid</FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="paid"
-                  name="radio-controll-paid"
-                  value={paidStatus}
-                  onChange={handlePaidStatus}
-                >
-                  <FormControlLabel value="1" control={<Radio />} label="Yes" />
-                  <FormControlLabel value="0" control={<Radio />} label="No" />
-                </RadioGroup>
-              </FormControl>
+              {service.InvoiceId === null ? (
+                <FormControl variant="standard">
+                  <InputLabel htmlFor="input-work">Work</InputLabel>
+                  <Input
+                    id="input-work"
+                    label="Work"
+                    value={workUpdate.work}
+                    onChange={handleWorkUpdate}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <strong>£</strong>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              ) : (
+                <div>
+                  <Switch
+                    checked={checked}
+                    onChange={handlePaidStatus}
+                    color="success"
+                  />
+                  <span>Paid </span>
+                </div>
+              )}
             </div>
 
             {paidStatus === "1" && (
@@ -184,47 +204,71 @@ const ServiceModal = ({ toggle, isModal, service, parts }) => {
                     )}
                   </Select>
                 </FormControl>
-                <hr />
-                <>
-                  <h4>Invoice Summary</h4>
-                </>
-                <MDBContainer>
-                  <MDBCard>
-                    <MDBCardBody>
-                      <div className="row">
-                        <div className="col">Parts Total</div>
-                        <div className="col">£{totalparts}</div>
-                      </div>
-                      <div className="row">
-                        <div className="col">Work Total</div>
-                        <div className="col">£{totalwork}</div>
-                      </div>
-                      <div className="row">
-                        <div className="col">Total:</div>
-                        <div className="col">£{total}</div>
-                      </div>
-                      <div className="row">
-                        <div className="col">Vat:</div>
-                        <div className="col">£{vat}</div>
-                      </div>
-                      <div className="row">
-                        <div className="col">Total with Vat:</div>
-                        <div className="col">£{totalvat}</div>
-                      </div>
-                    </MDBCardBody>
-                  </MDBCard>
-                </MDBContainer>
               </>
             )}
+            <hr />
+            <>
+              <h4 className="text-center">Invoice Summary</h4>
+            </>
+            <MDBContainer>
+              <MDBCard>
+                <MDBCardBody>
+                  <div className="row">
+                    <div className="col">
+                      <strong>Parts:</strong>
+                    </div>
+                  </div>
+                  {parts.map((e) => {
+                    return (
+                      <div className="row">
+                        <div className="col">
+                          <small>{e.p_name}</small>
+                        </div>
+                        <div className="col">
+                          <small>£{e.cost_vat}</small>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <div className="row">
+                    <div className="col">
+                      <small>Work</small>
+                    </div>
+                    <div className="col">
+                      <small>£{workUpdate.work}</small>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col">Total:</div>
+                    <div className="col">£{total}</div>
+                  </div>
+                  <div className="row">
+                    <div className="col">Vat:</div>
+                    <div className="col">£{vat}</div>
+                  </div>
+                  <div className="row">
+                    <div className="col">Total with Vat:</div>
+                    <div className="col">£{totalvat}</div>
+                  </div>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBContainer>
           </form>
         </MDBModalBody>
         <MDBModalFooter>
           <MDBBtn color="secondary" onClick={toggle}>
             Close
           </MDBBtn>
-          <MDBBtn color="success" form="update-service" type="submit">
-            Save changes
-          </MDBBtn>
+          {service.InvoiceId !== null ? (
+            <MDBBtn color="dark" disabled>
+              Create Invoice
+            </MDBBtn>
+          ) : (
+            <MDBBtn color="success" form="update-service" type="submit">
+              Create Invoice
+            </MDBBtn>
+          )}
         </MDBModalFooter>
       </MDBModal>
     </MDBContainer>

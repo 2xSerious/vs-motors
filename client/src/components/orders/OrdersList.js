@@ -21,7 +21,7 @@ export default function GetOrderList(props) {
   useEffect(() => {
     // GET ORDER LIST
     async function getOrdersList() {
-      const res = await axios.get(`${url}/orders`);
+      const res = await axios.get(`${url}/orders/open`);
       let data = res.data.orders;
       console.log(data);
       setOrders(data);
@@ -35,6 +35,7 @@ export default function GetOrderList(props) {
   async function getPartsList(id) {
     let res = await axios.get(`${url}/parts/order/${id}`);
     let data = res.data.parts;
+    console.log(data);
     setParts(data);
   }
   async function deleteOrderById(id) {
@@ -127,6 +128,15 @@ export default function GetOrderList(props) {
       </MDBContainer>
     );
   } else {
-    return <div>Loading...</div>;
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "300px" }}
+      >
+        <div className="spinner-border " role="status">
+          <span className="sr-only ">Loading...</span>
+        </div>
+      </div>
+    );
   }
 }

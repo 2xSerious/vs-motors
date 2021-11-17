@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import NumberFormat from "react-number-format";
 import { host } from "../host";
 import {
@@ -10,19 +10,37 @@ import {
   MDBBtn,
 } from "mdbreact";
 
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Input,
-  FormHelperText,
-  InputAdornment,
-} from "@mui/material";
+import AdapterDateFns from "@date-io/date-fns";
+import { LocalizationProvider, DatePicker } from "@mui/lab";
+import { MenuItem, InputAdornment, TextField, Box } from "@mui/material";
 import axios from "axios";
+
+const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(
+  props,
+  ref
+) {
+  const { onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            value: values.value,
+          },
+        });
+      }}
+      thousandsGroupStyle="thousand"
+      thousandSeparator
+    />
+  );
+});
 
 function CreateService({ toggle, isModal, refresh }) {
   const url = host.url;
+  const [date, setDate] = useState(new Date());
   const [orders, setOrders] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [orderID, setOrderID] = useState("");
@@ -38,7 +56,8 @@ function CreateService({ toggle, isModal, refresh }) {
     async function getOrders() {
       let res = await axios.get(`${url}/orders`);
       let data = res.data.orders;
-      setOrders(data);
+      let filter = data.filter((el) => el.status !== "closed");
+      setOrders(filter);
     }
     async function getWorkers() {
       let res = await axios.get(`${url}/workers`);
@@ -70,13 +89,9 @@ function CreateService({ toggle, isModal, refresh }) {
   // Prepare post
   async function postService() {
     console.log(service);
-    const d = new Date();
-    const dd = d.getDate();
-    const mm = d.getMonth() + 1;
-    const yyyy = d.getFullYear();
-    const date = `${yyyy}-${mm}-${dd}`;
+    let createDate = date.toISOString().split("T")[0];
     let post = await axios.post(`${url}/services`, {
-      date: date,
+      date: createDate,
       orderId: orderID,
       odometer: service.odometer,
       description: service.description,
@@ -120,13 +135,33 @@ function CreateService({ toggle, isModal, refresh }) {
         <MDBModalHeader toggle={toggle}>Service</MDBModalHeader>
         <MDBModalBody>
           <form id="service-form" onSubmit={handleSubmit}>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel htmlFor="order-select">Order</InputLabel>
-              <Select
+            <Box
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "20ch" },
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Date"
+                  value={date}
+                  inputFormat="d/M/y"
+                  onChange={(newValue) => {
+                    setDate(newValue);
+                    console.log(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField size="small" {...params} />
+                  )}
+                />
+              </LocalizationProvider>
+
+              <TextField
                 id="order-select"
+                select
                 label="Order"
                 value={orderID}
                 onChange={handleOrderId}
+                size="small"
               >
                 {orders ? (
                   orders.map((e) => {
@@ -137,48 +172,63 @@ function CreateService({ toggle, isModal, refresh }) {
                     );
                   })
                 ) : (
-                  <div>Loading...</div>
+                  <MenuItem value="0">Loading</MenuItem>
                 )}
-              </Select>
-            </FormControl>
-            {orderID ? (
-              <div className="d-flex justify-content-between">
-                <span>Customer: {orders[index].c_name}</span>
-                <span>
-                  Total parts: <strong>£{orders[index].total_vat}</strong>
-                </span>
-              </div>
-            ) : (
-              <div>None</div>
-            )}
+              </TextField>
 
-            <hr />
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 20 }}>
-              <InputLabel htmlFor="odometer">Odometer</InputLabel>
-              <NumberFormat
-                customInput={Input}
-                thousandsGroupStyle="thousand"
-                thousandSeparator={true}
-                id="odometer"
-                label="Odometer"
-                variant="standard"
+              {orderID ? (
+                <div className="d-flex justify-content-between">
+                  <span>Customer: {orders[index].c_name}</span>
+                  <span>
+                    Total parts: <strong>£{orders[index].total_vat}</strong>
+                  </span>
+                </div>
+              ) : (
+                <div>None</div>
+              )}
+
+              <hr />
+              <TextField
+                label="Miles"
                 value={service.odometer}
                 onChange={handleOdometer}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <strong>miles</strong>
-                  </InputAdornment>
-                }
+                size="small"
+                id="odometer-input"
+                InputProps={{
+                  inputComponent: NumberFormatCustom,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <strong>miles</strong>
+                    </InputAdornment>
+                  ),
+                }}
               />
-              <FormHelperText>Required*</FormHelperText>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel htmlFor="service-worker">Serviced by</InputLabel>
-              <Select
-                id="service-worker"
+
+              {/* <FormControl>
+                <InputLabel htmlFor="odometer">Odometer</InputLabel>
+                <NumberFormat
+                  customInput={Input}
+                  thousandsGroupStyle="thousand"
+                  thousandSeparator={true}
+                  id="odometer"
+                  value={service.odometer}
+                  onChange={handleOdometer}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <strong>miles</strong>
+                    </InputAdornment>
+                  }
+                />
+                <FormHelperText>Required*</FormHelperText>
+              </FormControl> */}
+
+              <TextField
+                id="order-select"
+                select
                 label="Serviced by"
                 value={service.workerId}
                 onChange={handleWorkerId}
+                size="small"
               >
                 {workers ? (
                   workers.map((e) => {
@@ -189,36 +239,37 @@ function CreateService({ toggle, isModal, refresh }) {
                     );
                   })
                 ) : (
-                  <div>Loading...</div>
+                  <MenuItem value="0">Loading</MenuItem>
                 )}
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 80 }}>
-              <InputLabel htmlFor="work-cost">Work</InputLabel>
-              <Input
-                id="work-cost"
+              </TextField>
+
+              <TextField
+                id="work-value"
                 label="Work"
-                variant="standard"
+                variant="outlined"
+                size="small"
                 value={service.work}
                 onChange={handleWork}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <strong>£</strong>
-                  </InputAdornment>
-                }
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <strong>£</strong>
+                    </InputAdornment>
+                  ),
+                }}
               />
-              <FormHelperText>Required*</FormHelperText>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 80 }}>
-              <InputLabel htmlFor="service-description">Description</InputLabel>
-              <Input
+
+              <TextField
                 id="service-description"
                 label="Description"
-                variant="standard"
+                variant="outlined"
+                size="small"
                 value={service.description}
                 onChange={handleDescription}
+                required
               />
-            </FormControl>
+            </Box>
           </form>
         </MDBModalBody>
         <MDBModalFooter>

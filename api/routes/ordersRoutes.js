@@ -6,5 +6,11 @@ router
   .route("/")
   .get(ordersController.getAll, ordersController.getLastInsertId)
   .post(ordersController.addOrder);
-router.route("/:id").delete(ordersController.deleteOrderById);
+
+router.route("/open").get(ordersController.getAllOpen);
+
+router
+  .route("/:id")
+  .delete(ordersController.deleteOrderById)
+  .put(ordersController.updateStatus);
 module.exports = router;

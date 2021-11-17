@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { host } from "../host";
 import {
   MDBContainer,
@@ -15,6 +15,7 @@ import axios from "axios";
 import { confirmAlert } from "react-confirm-alert";
 
 export default function UpdateVehicle(props) {
+  const updateModule = useRef(null);
   const [vehicle, setVehicle] = useState({
     make: "",
     model: "",
@@ -165,7 +166,7 @@ export default function UpdateVehicle(props) {
 
   return (
     <MDBContainer className="mt-5">
-      <MDBModal isOpen={props.modal} toggle={props.toggle}>
+      <MDBModal ref={updateModule} isOpen={props.modal} toggle={props.toggle}>
         <MDBModalHeader toggle={props.toggle}>Update Vehicle</MDBModalHeader>
         <MDBModalBody>
           <form

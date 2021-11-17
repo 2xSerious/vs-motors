@@ -12,6 +12,7 @@ export default function OrderPartList(props) {
             return (
               <tr key={(e.partName, e.partValue)}>
                 <td>{count}</td>
+                <td>{e.supplierName}</td>
                 <td>
                   <strong>{e.partName}</strong>
                 </td>

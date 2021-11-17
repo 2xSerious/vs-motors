@@ -6,23 +6,91 @@ import GetVehicleList from "./VehicleList";
 import { host } from "../host";
 
 function Vehicles() {
-  const [vehicles, setVehicles] = useState([]);
+  const [vehicles, setVehicles] = useState({
+    columns: [
+      {
+        label: "#",
+        field: "num",
+        sort: "asc",
+      },
+      {
+        label: "Make",
+        field: "make",
+        sort: "asc",
+      },
+      {
+        label: "Model",
+        field: "model",
+        sort: "asc",
+      },
+      {
+        label: "Year",
+        field: "year",
+        sort: "asc",
+      },
+      {
+        label: "Reg Number",
+        field: "reg",
+      },
+      {
+        label: "Owner",
+        field: "owner",
+        sort: "asc",
+      },
+    ],
+    rows: [],
+  });
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [reg, setReg] = useState("");
   const [owner, setOwner] = useState("");
   const [submit, setSubmit] = useState(false);
+
+  const [modal, setModal] = useState(false);
+  const [id, setId] = useState("");
+  const [customer, setCustomer] = useState("");
+
   const url = host.url;
+
+  const handler = (id, owner) => {
+    setId(id);
+    setCustomer(owner);
+    toggle();
+  };
+
+  const toggle = () => {
+    setModal(!modal);
+  };
+
   useEffect(() => {
     async function getVehicles() {
       const res = await axios.get(`${url}/vehicles/`);
       let data = res.data.response;
-      setVehicles(data);
+      if (data.length > 0) {
+        let counter = 1;
+        let arr = data.reduce(
+          (acc, sub) => [
+            ...acc,
+            {
+              num: counter++,
+              make: sub.make,
+              model: sub.model,
+              year: sub.year,
+              reg: sub.reg_num,
+              owner: sub.c_name,
+              clickEvent: () => handler(sub.id, sub.c_name),
+            },
+          ],
+          []
+        );
+
+        setVehicles((prev) => ({ ...prev, rows: arr }));
+      }
     }
     getVehicles();
     setSubmit(false);
-  }, [submit]);
+  }, [url, submit]);
 
   // HANDLE INPUTS
   const handleChangeMake = (e) => {
@@ -105,7 +173,15 @@ function Vehicles() {
         reg={reg}
         ownerId={owner}
       />
-      <GetVehicleList handleSubmit={toggleSubmit} vehicles={vehicles} />,
+      <GetVehicleList
+        handleSubmit={toggleSubmit}
+        vehicles={vehicles}
+        toggle={toggle}
+        customer={customer}
+        id={id}
+        modal={modal}
+      />
+      ,
     </MDBContainer>
   );
 }

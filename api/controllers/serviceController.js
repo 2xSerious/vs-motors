@@ -31,17 +31,35 @@ exports.getServiceList = async (req, res, next) => {
   }
 };
 
+exports.getAllCurrent = async (req, res, next) => {
+  try {
+    let [response, _] = await Service.getAllCurrent();
+    res.status(200).json({ response });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 exports.updateService = async (req, res, next) => {
   try {
-    let { id, work, paidStatus, paidId } = req.body;
-    if (!paidStatus) {
-      paidStatus = "0";
-      paidId = "1";
-    }
+    let { id, work } = req.body;
     console.log(req.body);
-    const service = new Service({ work, paidStatus, paidId });
+    const service = new Service({ work });
     await service.update(id);
     res.status(200).json({ service });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+exports.updatePaidStatus = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    let { paidStatus, paidId } = req.body;
+    const update = new Service({ paidId, paidStatus });
+    await update.updatePaidStatus(id);
+    res.status(200).json({ update });
   } catch (error) {
     console.log(error);
     next(error);

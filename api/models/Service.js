@@ -27,7 +27,8 @@ class Service {
                       o.id as orderID, o.status,
                       v.id as vehicleID, v.model, v.make, v.year, v.reg_num,
                       c.id as customerID, c.c_name, c.phone, c.email, c.street_address, c.city, c.postcode, c.country,
-                      IFNULL(p.total_vat, 0) as total_vat
+                      IFNULL(p.total_vat, 0) as total_vat,
+                      i.id as InvoiceId
                       FROM service_book s
                       LEFT JOIN orders o
                       ON s.order_id = o.id
@@ -41,6 +42,36 @@ class Service {
                       ON o.id = p.order_id 
                       LEFT JOIN workers w
                       ON s.worker_id = w.id
+                      LEFT JOIN invoices i
+                      ON i.service_id = s.id
+                       `;
+    return db.execute(sql);
+  }
+
+  static getAllCurrent() {
+    let sql = `SELECT s.id, DATE_FORMAT(s.created_at, '%d/%m/%Y') as created_at, s.odometer, s.description, s.work, s.worker_id, s.paid_id, s.paid_status,
+                      w.id as workerId, w.w_name,
+                      o.id as orderID, o.status,
+                      v.id as vehicleID, v.model, v.make, v.year, v.reg_num,
+                      c.id as customerID, c.c_name, c.phone, c.email, c.street_address, c.city, c.postcode, c.country,
+                      IFNULL(p.total_vat, 0) as total_vat,
+                      i.id as InvoiceId
+                      FROM service_book s
+                      LEFT JOIN orders o
+                      ON s.order_id = o.id
+                      LEFT JOIN vehicles v                                 
+                      ON o.vehicle_id = v.id
+                      LEFT JOIN clients c 
+                      ON v.customer_id = c.id
+                      LEFT JOIN (SELECT order_id, sum(cost_vat) as total_vat 
+                      FROM parts 
+                      GROUP BY order_id ) p 
+                      ON o.id = p.order_id 
+                      LEFT JOIN workers w
+                      ON s.worker_id = w.id
+                      LEFT JOIN invoices i
+                      ON i.service_id = s.id
+                      WHERE i.id IS NULL
                        `;
     return db.execute(sql);
   }
@@ -52,8 +83,15 @@ class Service {
   update(id) {
     console.log(id);
     let sql = `UPDATE service_book
-                SET work='${this.work}', paid_status='${this.paidStatus}', paid_id='${this.paidId}'
+                SET work='${this.work}'
                 WHERE id = '${id}' `;
+    return db.execute(sql);
+  }
+  updatePaidStatus(id) {
+    let sql = `UPDATE service_book
+               SET paid_id = '${this.paidId}',
+                   paid_status = '${this.paidStatus}'
+               WHERE id = '${id}'`;
     return db.execute(sql);
   }
   add() {

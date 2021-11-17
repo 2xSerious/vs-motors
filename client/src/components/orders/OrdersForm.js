@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { host } from "../host";
 import {
   MDBContainer,
-  MDBRow,
-  MDBCol,
   MDBBtn,
   MDBIcon,
   MDBModal,
@@ -12,22 +10,22 @@ import {
   MDBModalFooter,
 } from "mdbreact";
 import OrderPartList from "./orderPartlist";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import { InputAdornment, Input, FormHelperText } from "@mui/material";
+import { InputAdornment, MenuItem, TextField, Box } from "@mui/material";
+import AdapterDateFns from "@date-io/date-fns";
+import { LocalizationProvider, DatePicker } from "@mui/lab";
 import axios from "axios";
 
 const CreateOrder = (props) => {
   const [vehicles, setVehicles] = useState([]);
 
   const [part, setPart] = useState({
+    date: new Date(),
     partName: "",
     quantity: 1,
     partValue: "",
     partValueVat: "",
     supplierId: "",
+    supplierName: "",
   });
 
   const [parts, setParts] = useState([]);
@@ -64,10 +62,11 @@ const CreateOrder = (props) => {
 
   // HANDLERS
 
-  const handleSupplierChange = (e) => {
+  function handleSupplierChange(e, index) {
     const id = e.target.value;
-    setPart((prev) => ({ ...prev, supplierId: id }));
-  };
+    const name = index.props.text;
+    setPart((prev) => ({ ...prev, supplierId: id, supplierName: name }));
+  }
   const handlePartNameChange = (e) => {
     const part = e.target.value;
     if (part) {
@@ -162,7 +161,12 @@ const CreateOrder = (props) => {
 
   return (
     <MDBContainer className="mt-5">
-      <MDBModal isOpen={props.modal} toggle={props.toggle} backdrop={false}>
+      <MDBModal
+        isOpen={props.modal}
+        size="lg"
+        toggle={props.toggle}
+        backdrop={false}
+      >
         <MDBModalHeader toggle={props.toggle}>Create Order</MDBModalHeader>
         <MDBModalBody>
           <form
@@ -171,135 +175,137 @@ const CreateOrder = (props) => {
             onSubmit={onSubmit}
             noValidate
           >
-            <MDBRow>
-              <MDBCol md="4">
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="vehicle-year">Customer</InputLabel>
-                  <Select
-                    labelId="vehicle-year"
-                    id="select-vehicle-year"
-                    value={props.customerId}
-                    onChange={props.onCustomerIdChange}
-                    label="Customer"
-                  >
-                    {props.customers ? (
-                      props.customers.map((e) => {
-                        return (
-                          <MenuItem key={e.id + "-" + e.c_name} value={e.id}>
-                            {e.c_name}
-                          </MenuItem>
-                        );
-                      })
-                    ) : (
-                      <div>Loading...</div>
-                    )}
-                  </Select>
-                </FormControl>
-              </MDBCol>
-              <MDBCol md="4">
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="vehicle">Vehicle</InputLabel>
-                  <Select
-                    labelId="vehicle"
-                    id="select-vehicle"
-                    value={props.vehicleId}
-                    onChange={props.onVehicleIdChange}
-                    label="Vehicle"
-                  >
-                    {vehicles ? (
-                      vehicles.map((e) => {
-                        return (
-                          <MenuItem key={e.id} value={e.id}>
-                            {e.make} {e.model} {e.reg_num}
-                          </MenuItem>
-                        );
-                      })
-                    ) : (
-                      <div>Loading...</div>
-                    )}
-                  </Select>
-                </FormControl>
-              </MDBCol>
-            </MDBRow>
+            <Box
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "20ch" },
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Date"
+                  value={part.date}
+                  inputFormat="d/M/y"
+                  onChange={(newValue) => {
+                    setPart((prev) => ({ ...prev, date: newValue }));
+                  }}
+                  renderInput={(params) => (
+                    <TextField size="small" {...params} />
+                  )}
+                />
+              </LocalizationProvider>
+
+              <TextField
+                id="customer-select"
+                select
+                label="Customer"
+                value={props.customerId}
+                onChange={props.onCustomerIdChange}
+                size="small"
+              >
+                {props.customers ? (
+                  props.customers.map((e) => {
+                    return (
+                      <MenuItem key={e.id + "-" + e.c_name} value={e.id}>
+                        {e.c_name}
+                      </MenuItem>
+                    );
+                  })
+                ) : (
+                  <MenuItem value="0">Loading</MenuItem>
+                )}
+              </TextField>
+
+              <TextField
+                id="vehicle-select"
+                select
+                label="Vehicle"
+                value={props.vehicleId}
+                onChange={props.onVehicleIdChange}
+                size="small"
+              >
+                {vehicles ? (
+                  vehicles.map((e) => {
+                    return (
+                      <MenuItem key={e.id} value={e.id}>
+                        {e.make} {e.model} {e.reg_num}
+                      </MenuItem>
+                    );
+                  })
+                ) : (
+                  <MenuItem value="0">Loading</MenuItem>
+                )}
+              </TextField>
+            </Box>
             <hr />
-            <MDBRow>
-              <MDBCol md="4">
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="supplier">Supplier</InputLabel>
-                  <Select
-                    labelId="supplier"
-                    id="select-supplier"
-                    value={part.supplierId}
-                    onChange={handleSupplierChange}
-                    label="Supplier"
-                  >
-                    {props.suppliers ? (
-                      props.suppliers.map((e) => {
-                        return (
-                          <MenuItem key={e.id} value={e.id}>
-                            {e.s_name}
-                          </MenuItem>
-                        );
-                      })
-                    ) : (
-                      <div>Loading...</div>
-                    )}
-                  </Select>
-                </FormControl>
-              </MDBCol>
-              <MDBCol>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="part">Part</InputLabel>
-                  <Input
-                    id="standard-basic"
-                    label="Part"
-                    variant="standard"
-                    value={part.partName}
-                    onChange={handlePartNameChange}
-                  />
-                  <FormHelperText>Required*</FormHelperText>
-                </FormControl>
-              </MDBCol>
-              <MDBCol>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
-                  <InputLabel id="quantity">Quantity</InputLabel>
-                  <Input
-                    id="standard-basic"
-                    label="Quantity"
-                    variant="standard"
-                    value={part.quantity}
-                    onChange={handleQuantity}
-                  />
-                  <FormHelperText>Required*</FormHelperText>
-                </FormControl>
-              </MDBCol>
-              <MDBCol>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
-                  <InputLabel id="value">Value</InputLabel>
-                  <Input
-                    id="cost"
-                    label="Value"
-                    variant="standard"
-                    value={part.partValue}
-                    onChange={handlePartValueChange}
-                    startAdornment={
-                      <InputAdornment position="start">£</InputAdornment>
-                    }
-                  />
-                  <FormHelperText>Required*</FormHelperText>
-                </FormControl>
-              </MDBCol>
-              <MDBCol>
-                <MDBBtn
-                  className="mt-4"
-                  color="success"
-                  size="sm"
-                  onClick={addToPartList}
-                >
-                  <MDBIcon icon="plus" /> Add
-                </MDBBtn>
-              </MDBCol>
-            </MDBRow>
+            <Box
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "18ch" },
+              }}
+            >
+              <TextField
+                id="supplier-select"
+                select
+                label="Supplier"
+                value={part.supplierId}
+                onChange={handleSupplierChange}
+                size="small"
+              >
+                {props.suppliers ? (
+                  props.suppliers.map((e) => {
+                    return (
+                      <MenuItem key={e.id} value={e.id} text={e.s_name}>
+                        {e.s_name}
+                      </MenuItem>
+                    );
+                  })
+                ) : (
+                  <MenuItem value="0">Loading</MenuItem>
+                )}
+              </TextField>
+              <TextField
+                id="part"
+                label="Part"
+                variant="outlined"
+                size="small"
+                value={part.partName}
+                onChange={handlePartNameChange}
+                required
+              />
+
+              <TextField
+                id="part-quantity"
+                label="Quantity"
+                variant="outlined"
+                size="small"
+                value={part.quantity}
+                onChange={handleQuantity}
+                required
+              />
+
+              <TextField
+                id="part-value"
+                label="Value"
+                variant="outlined"
+                size="small"
+                value={part.partValue}
+                onChange={handlePartValueChange}
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">£</InputAdornment>
+                  ),
+                }}
+              />
+
+              <MDBBtn
+                className="mt-4"
+                color="success"
+                size="sm"
+                onClick={addToPartList}
+              >
+                <MDBIcon icon="plus" /> Add
+              </MDBBtn>
+            </Box>
           </form>
           {parts ? (
             <OrderPartList onRemove={removeFromPartList} parts={parts} />

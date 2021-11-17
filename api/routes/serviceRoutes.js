@@ -8,6 +8,10 @@ router
   .post(service.createService)
   .put(service.updateService);
 
-router.route("/service/:id").get(service.getServiceById);
+router.route("/current").get(service.getAllCurrent);
+router
+  .route("/service/:id")
+  .get(service.getServiceById)
+  .put(service.updatePaidStatus);
 router.route("/types").get(service.getPaidTypes);
 module.exports = router;

@@ -7,6 +7,7 @@ import Workers from "./components/workers/Workers";
 import Vehicles from "./components/vehicles/Vehicles";
 import Orders from "./components/orders/Orders";
 import Services from "./components/service-sheet/Services";
+import Home from "./components/main/home";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Header />
         <div className="content">
           <Switch>
+            <Route path="/home" component={Home} />
             <Route path="/clients" component={Customers} />
             <Route path="/suppliers" component={Suppliers} />
             <Route path="/workers" component={Workers} />
